@@ -15,3 +15,6 @@ My name is Sandra and I'm studying computer science.
 
 ## Pelin Akbiyik, QA Leader
 My name is Pelin. I am from Charleston, SC. I have a BS degree in Math. I moved to Boston two years ago to pursue MS degree in CS with Data Analytics concentration.
+
+## Dinara Tiyekbayeva, Configuration Leader
+My name is Dinara. I was born and raised in Kazakhstan, but moved to United States 6 years ago. I am a part time MSCS student and this is my forth year, I am hoping to finish this degree by the end of this year. 
