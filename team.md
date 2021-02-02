@@ -10,5 +10,5 @@ My name is Elijah Curme and I am from Boston. In undergrad I studied criminology
 My name is Chenghao Feng, major in Computer Science. Currently, I'm still learning computer security. I'm a quiet person, and I will try to check our project on the security field.
 
 
-## Member3's name and your leader role
-A brief description about yourself
+## Sandra Zhen, Implementation Leader
+My name is Sandra and I'm studying computer science.
