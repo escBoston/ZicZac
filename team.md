@@ -12,3 +12,6 @@ My name is Chenghao Feng, major in Computer Science. Currently, I'm still learni
 
 ## Sandra Zhen, Implementation Leader
 My name is Sandra and I'm studying computer science.
+
+## Pelin Akbiyik, QA Leader
+My name is Pelin. I am from Charleston, SC. I have a BS degree in Math. I moved to Boston two years a go to pursue MS degree in CS with Data Analytics concentration.
