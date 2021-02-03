@@ -20,4 +20,4 @@ My name is Pelin. I am from Charleston, SC. I have a BS degree in Math. I moved 
 My name is Dinara. I was born and raised in Kazakhstan, but moved to United States 6 years ago. I am a part time MSCS student and this is my forth year, I am hoping to finish this degree by the end of this year. 
 
 ## Jungwoo Hwang, Requirement Leader
-My name is Jungwoo. I did my undergrad in BU majoring in Biology and now I am in MSCS. CS673 is the last course for my graduation! I am also having a direct study with Professor Reza on developing a human voice tracking robot.
+My name is Jungwoo. I did my undergrad in BU majoring in Biology and now I am in MSCS. CS673 is the last course for my graduation. I am also having a direct study with Professor Reza on developing a human voice tracking robot. I will try my best to complete my tasks and collaborate with my team.
