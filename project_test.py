@@ -1,6 +1,7 @@
 from datetime import datetime
 import arrow
 import cx_Oracle
+import pickle
 
 class Item:
     desc = ""
@@ -11,6 +12,9 @@ class Item:
         
     def add_description(self, desc):
         self.desc = desc
+    
+    def add_seller(self, seller):
+        self.seller = seller
         
 
 class Order:
@@ -34,29 +38,24 @@ class Account:
     def add_order(self, order):
         self.orders.append(order)
 
-dsn_tns = cx_Oracle.makedsn("127.0.0.1", "1521", service_name="XE")
-conn = cx_Oracle.connect(user="system", password="advanstSYS1", dsn=dsn_tns, mode=cx_Oracle.SYSDBA)
-cur = conn.cursor()
+file = open("accounts.obj",'rb')
+accounts = pickle.load(file)
+file.close()
 
-accounts = {}
 def create_account(username, password):
-    tryquery = f"SELECT * FROM SYSTEM.ACCOUNTS WHERE USERNAME={username}"
-    cur.execute(tryquery)
-    if not cur.fetchall(): # username not taken
-        createquery = f"INSERT INTO SYSTEM.ACCOUNTS VALUES({username}, {password})"
-        cur.execute(query)
-        accounts[username] = Account(password) # 
-        return "Account Created"
-    else: # username is taken
-        return "Username Taken"
+    if username in accounts:
+        return "Username taken"
+    else:
+        accounts[username] = Account(password)
+        filehandler = open("accounts.obj","wb")
+        pickle.dump(accounts,filehandler)
+        filehandler.close()
+        return "Account created"
 
-# (front end prompts for login)
 def trylogin(username, password):
-    query = f"SELECT * FROM SYSTEM.ACCOUNTS WHERE USERNAME={username} AND PASSWORD={password}"
-    cur.execute(query)
-    if not cur.fetchall():
-        return False
-    return True
+    if accounts[username].password == password:
+        return True
+    return False
 
 #tests
 i = Item("lamp", 12.00)
@@ -70,4 +69,3 @@ o.add_item(j)
 
 a = Account()
 a.add_order(o)
-
