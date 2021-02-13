@@ -1,7 +1,7 @@
 # This part deals with the security of password
 class passwordManager:
     # length should be 14 to 21, with upper and lower alphabet, numeral, and special symbol including "?", "!", "@", "#", "%", and "&".
-    # output will be [encoded password, True or False, passStatus]. True or False represent password reach the requirement or not; passStatus briefly describes the specific issue.
+    # format of output is [password, True or False, passStatus]. True or False represent password reach the requirement or not; passStatus briefly describes the specific issue.
     def formatChecking(self, password):
         # initial
         special_char = ["?", "!", "@", "#", "%", "&"]
