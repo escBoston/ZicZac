@@ -155,12 +155,6 @@ button {
 .home-main-section {
   padding: 6rem 0;
 }
-#home-main-section-top {
-  height: 760px;
-  margin: 0 auto;
-  position: relative;
-  background-color: #FBF7F2;
-}
 
 .home-main-section {
   height: 760px;
@@ -170,7 +164,9 @@ button {
   justify-content: space-between;
 }
 
-
+.background-pale-beach {
+  background-color: #FBF7F2;
+}
 
 .background-gray {
   background-color: #F8F9FA;
