@@ -38,9 +38,9 @@ class Account:
     def add_order(self, order):
         self.orders.append(order)
 
-file = open("accounts.obj",'rb')
-accounts = pickle.load(file)
-file.close()
+#file = open("accounts.obj",'rb')
+#accounts = pickle.load(file)
+#file.close()
 
 def create_account(username, password):
     if username in accounts:
@@ -58,14 +58,14 @@ def trylogin(username, password):
     return False
 
 #tests
-i = Item("lamp", 12.00)
-i.add_description("a floor lamp")
+#i = Item("lamp", 12.00)
+#i.add_description("a floor lamp")
 
-j = Item("box", 2.00)
+#j = Item("box", 2.00)
 
-o = Order()
-o.add_item(i)
-o.add_item(j)
+#o = Order()
+#o.add_item(i)
+#o.add_item(j)
 
-a = Account()
-a.add_order(o)
+#a = Account()
+#a.add_order(o)

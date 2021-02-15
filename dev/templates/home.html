@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<header>
+  <h1>Hello, {{username}}!</h1>
+</header>
+<body>
+  <h3>Your orders</h3>
+  <ul>
+    {% for order in orders %}
+    <li> Order placed {{ order.orderDate }} </li>
+    <ul>
+      {% for item in order.items %}
+        <li>Item: {{item.title}}, Price: {{item.price}}</li>
+      {% endfor %}
+    </ul>
+    {% endfor %}
+  </ul>
+</body>
+</html>
