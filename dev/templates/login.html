@@ -3,7 +3,7 @@
 <head>
 <title>Login</title>
 </head>
-
+<h1>Login</h1>
 <body>
 <form class="form" action="/submit" method="get">
 <div class="container">
@@ -14,6 +14,9 @@
     <div>
         <button class="button" type="submit" onclick="submit()">Submit</button>
     </div>
+    <br>
+    <a id="signup" href="signup" onclick="signup();">Sign Up</a><br>
+    <p style="color:red">{{message}}</p>
 </div>
 </form>
 </body>
