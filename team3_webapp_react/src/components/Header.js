@@ -8,16 +8,16 @@ const Header = () => {
     <Navbar bg="light" variant="light">
     <Navbar.Brand href="#home"><img className="logo" src={logo} alt="Logo" /></Navbar.Brand>
     <Nav className="mr-auto">
-      <Nav.Link href="#home">Home</Nav.Link>
-      <Nav.Link href="#roducts">Products</Nav.Link>
+      <Nav.Link href="../Home">Home</Nav.Link>
+      <Nav.Link href="../Products">Products</Nav.Link>
     </Nav>
     <Form inline>
       <FormControl type="text" placeholder="Search" className="mr-sm-2" />
       <Button variant="outline-primary">Search</Button>
     </Form>
     <Nav className="ml-auto">
-      <Nav.Link href="#deals">Deals</Nav.Link>
-      <Nav.Link href="#account">Account</Nav.Link>
+      <Nav.Link href="../Deals">Deals</Nav.Link>
+      <Nav.Link href="../Account">Account</Nav.Link>
     </Nav>
   </Navbar>
   )
