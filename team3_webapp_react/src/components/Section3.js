@@ -3,7 +3,7 @@ import Container from 'react-bootstrap/Container'
 
 const Section3 = () => {
   return(
-    <div className="section2">
+    <div className="section3">
     </div>
   )
 }

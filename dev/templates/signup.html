@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sign up</title>
+</head>
+<h1>Sign up</h1>
+<body>
+<form class="form" action="/submitsignup" method="get">
+<div class="container">
+    <input type="text" placeholder="Username" name="username" required>
+    <br><br>
+    <input type="text" placeholder="Password" name="password" required>
+    <br><br>
+    <input type="text" placeholder="Email" name="email" required>
+    <div>
+        <button class="button" type="submit" onclick="submitsignup()">Submit</button>
+    </div>
+    <a id="login" href="login" onclick="login();">Login</a><br>
+    <p style="color:red">{{message}}</p>
+</div>
+</form>
+</body>
+</html>
