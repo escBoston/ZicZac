@@ -6,57 +6,27 @@ import { SocialIcon } from 'react-social-icons';
 
 const Footerpage = () => {
   return (
-    <footer bg="light" variant="light" className="footer-container">
-    <div className="container">
-      <div className="row">
-        <div className="col-sm">
-          <SocialIcon url="http://linkedin.com" />
-          <SocialIcon network="twitter" />
-          <SocialIcon network="medium" />
-          <SocialIcon network="facebook" />
-        </div>
-        <div className="col-sm">
-
-        <ul className="list">
-        <h5>Support</h5>
-          <li className="list-unstyled">
-            <a href="#!">Reward Program</a>
-          </li>
-          <li className="list-unstyled">
-            <a href="#!">Site Map</a>
-          </li>
-          </ul>
-        </div>
-        <div className="col-sm">
-
-        <ul className="list">
-        <h5>Company</h5>
-          <li className="list-unstyled">
-            <a href="#!">Reward Program</a>
-          </li>
-          <li className="list-unstyled">
-            <a href="#!">Site Map</a>
-          </li>
-          </ul>
-        </div>
-        <div className="mr-sm-2">
-
-        <ul className="list">
-        <h5>Terms & Policies</h5>
-          <li className="list-unstyled">
-            <a href="#!">Reward Program</a>
-          </li>
-          <li className="list-unstyled">
-            <a href="#!">Site Map</a>
-          </li>
-          </ul>
-        </div>
+    <footer class="text-center text-white" className="footer-container" style="background-color: #363b3f">
+      <div className="container">
+        <section class=" ">
+          <p class="d-flex justify-content-center align-items-center">
+            <span class="me-3" style="color:rgb(255,255,255);font-size:160%;font-family:DejaVu Sans Mono">
+               Register for free
+            </span>
+            <button className="button" style="border: 2px solid grey;border-radius:10%;background-color:#363b3f;color:white;font-size:100%;font-family:DejaVu Sans Mono">
+                Sign Up!
+            </button>
+            <button className="button" style="border: 2px solid grey;border-radius:10%;background-color:#363b3f;color:white;font-size:100%;font-family:DejaVu Sans Mono">
+                Contact Us!
+            </button>
+          </p>
+        </section>
       </div>
-    </div>
 
-<div className="footer-copyright text-center py-3">&copy; {new Date().getFullYear()} Copyright: <a href='#'> ziczac.com </a></div>
-
-    </footer>
+      <small>
+        <div className="footer-copyright text-center py-3" style="color:white">&copy; {new Date().getFullYear()} Copyright: <a href='#' style="color:orange"> ziczac.com </a></div>
+      </small>
+     </footer>
   );
 }
 
