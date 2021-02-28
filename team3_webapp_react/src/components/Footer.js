@@ -16,6 +16,7 @@ const Footerpage = () => {
          <div class="row">
             <div class="col-sm-2 col-md-3 item">
               <img src="./zigzaglogo_only.jpg" alt="zig zag logo" width="100" height="100">
+              <br><br>
               <button className="button" style="border: 2px solid grey;border-radius:10%;background-color:#363b3f;color:white;font-size:100%;font-family:DejaVu Sans Mono">
                 Contact Us!
               </button>
