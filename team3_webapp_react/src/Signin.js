@@ -1,46 +1,104 @@
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Header from './components/Header'
-import Footer from './components/Footer'
-import React, { Component } from "react";
+import {login, useAuth, logout} from "./auth"
+
+import Header from './components/Header';
+import Footer from './components/Footer';
+
+import React, { useEffect, useState } from "react";
+import {
+  Link,
+  useHistory
+} from "react-router-dom";
 
 function Signin() {
+  let history = useHistory();
+
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [count, setCount] = useState(0);
+
+  const [logged] = useAuth();
+
+  const onSubmitClick = (e)=>{
+    e.preventDefault()
+    console.log("You pressed login")
+    let opts = {
+      'username': username,
+      'password': password
+    }
+    console.log(opts)
+    fetch('http://localhost:5000/api/login', {
+      method: 'post',
+      body: JSON.stringify(opts)
+    }).then(r => r.json())
+      .then(token => {
+        if (token.message === 'Login accepted.'){
+          console.log("good job.")
+          login(token)
+          history.push("/")
+        }
+        else {
+          console.log("Please type in correct username/password")
+          setCount(1);
+        }
+      })
+  }
+
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value)
+  }
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value)
+  }
+
   return (
-    <div>
+    <div className="App">
     <Header />
-                <form>
-                    <h3>Sign In</h3>
+    <div className="container p-3 my-3 border">
+        <h3>Sign In</h3>
 
-                    <div className="form-group">
-                        <label>Email address</label>
-                        <input type="email" className="form-control" placeholder="Enter email" />
-                    </div>
+        {!logged? <div>
+        <div className="form-group">
+            <label>Username</label>
+            <input type="username" className="form-control"
+                   placeholder="Username"
+                   onChange={handleUsernameChange}
+                   value={username}/>
+        </div>
 
-                    <div className="form-group">
-                        <label>Password</label>
-                        <input type="password" className="form-control" placeholder="Enter password" />
-                    </div>
+        <div className="form-group">
+            <label>Password</label>
+            <input type="password" className="form-control"
+                  placeholder="Enter password"
+                  onChange={handlePasswordChange}
+                  value={password}/>
+        </div>
+        {/*TODO: implement function for this */}
+        <div className="form-group">
+            <div className="custom-control custom-checkbox">
+                <input type="checkbox" className="custom-control-input" id="customCheck1" />
+                <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
+            </div>
+        </div>
 
-                    <div className="form-group">
-                        <div className="custom-control custom-checkbox">
-                            <input type="checkbox" className="custom-control-input" id="customCheck1" />
-                            <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
-                        </div>
-                    </div>
+        <button onClick={onSubmitClick} type="submit" className="btn btn-primary btn-block">
+          Submit
+        </button>
+      { count === 1 && <p>Your login credentials could not be verified, please try again.</p>}
 
-                    <button type="submit" className="btn btn-primary btn-block">Submit</button>
-                    <p className="forgot-password text-center">
-                        Forgot <a href="#">password?</a>
-                    </p>
-                    <p className="text-right">
-                        Don't have an account? <a href="./Signup">sign up</a>
-                    </p>
-                </form>
+      {/*TODO: implement function for this */}
+        <p className="forgot-password text-center">
+            Forgot <a href="#">password?</a>
+        </p>
+        <p className="text-right">
+            Don't have an account? <a href="./Signup">sign up</a>
+        </p>
+        </div>
+        : <button onClick={() => logout()}  type="submit" className="btn btn-primary btn-block">Logout</button>}
+    </div>
     <Footer />
     </div>
-
-
-  );
+  )
 }
 
 export default Signin;
