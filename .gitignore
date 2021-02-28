@@ -123,3 +123,7 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# npm
+team3_webapp_react/node_modules/
+dev/static/
