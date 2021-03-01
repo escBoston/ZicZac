@@ -1,6 +1,5 @@
 from datetime import datetime
 import arrow
-import cx_Oracle
 import pickle
 import numpy as np
 
@@ -11,9 +10,13 @@ class Item:
         self.desc = ""
         self.dateAdded = arrow.now().format('YYYY-MM-DD')
         self.ratings = []
+        self.tags = []
         
     def add_description(self, desc):
         self.desc = desc
+        
+    def add_tag(self, tag):
+        self.tags.append(tag)
     
     def add_seller(self, seller):
         self.seller = seller
@@ -26,6 +29,9 @@ class Item:
     
     def get_date(self):
         return self.dateAdded
+    
+    def get_tags(self):
+        return self.tags
         
 class Order:
     def __init__(self):
@@ -41,10 +47,14 @@ class Order:
         return self.items
     
 class Account:
-    def __init__(self, password):
+    def __init__(self, password, email):
         #self.username = username
         self.password = password
+        self.email = email
         self.orders = []
+        
+    def add_email(self, email):
+        self.email = email
         
     def add_order(self, order):
         self.orders.append(order)

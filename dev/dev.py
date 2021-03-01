@@ -54,18 +54,21 @@ def login():
 
 @app.route('/api/signup', methods=['POST'])
 def signup():
-    """
-    Logs a user in by parsing a POST request containing user credentials.
-    """
     accounts, inventory = _load_user_info()
 
     req = flask.request.get_json(force=True)
-    firstname = req.get('firstname')
-    lastname = req.get('lastname')
     email = req.get('email')
+    username = req.get('username')
     password = req.get('password')
 
-    return {'message': 'Signup success.'}, 200
+    if username in accounts:
+        return {'message' : 'username taken'}, 200
+    else:
+        accounts[username] = Account(password=password, email=email)
+        file = open("accounts.obj", "wb")
+        pickle.dump(accounts, file)
+        file.close()
+        return {'message' : 'success'}, 200
 
 # @app.route('/api/refresh', methods=['POST'])
 # def refresh():
