@@ -6,7 +6,7 @@ import Container from 'react-bootstrap/Container'
 const Section2 = () => {
   const [sort, setSort] = useState('')
   const [logged] = useAuth();
-  const inventory = ["test"];
+  const [inventory, setInventory] = useState([]);
 
   const onSubmitClick = (e)=>{
     e.preventDefault()
@@ -22,10 +22,7 @@ const Section2 = () => {
       .then(token => {
         console.log('sort success')
         const inv = token.inventory
-        console.log(inv)
-        for (var i=0; i<inv.length; i++) {
-          inventory.push(inv[i])
-        }
+        setInventory(inv)
       })
   }
 
