@@ -2,6 +2,7 @@ from datetime import datetime
 import arrow
 import pickle
 import numpy as np
+import json
 
 class Item:    
     def __init__(self, title, price):
@@ -32,6 +33,9 @@ class Item:
     
     def get_tags(self):
         return self.tags
+    
+    def to_JSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=False, indent=4)
         
 class Order:
     def __init__(self):

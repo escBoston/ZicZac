@@ -1,6 +1,6 @@
 import pickle
 import os
-
+import json
 import flask
 import flask_cors
 
@@ -69,6 +69,22 @@ def signup():
         pickle.dump(accounts, file)
         file.close()
         return {'message' : 'success'}, 200
+
+@app.route('/api/sort', methods=['POST'])
+def sort():
+    accounts, inventory = _load_user_info()
+    req = flask.request.get_json(force=True)
+    sort = req.get('sort')
+
+    if sort=='recent':
+        inventory.sort(key=Item.get_date)
+    elif sort=='top':
+        inventory.sort(key=Item.get_rating)
+    elif sort=='price':
+        inventory.sort(key=Item.price)
+
+    inv_json = [i.to_JSON() for i in inventory]
+    return {'inventory': inv_json}, 200
 
 # @app.route('/api/refresh', methods=['POST'])
 # def refresh():
