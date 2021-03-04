@@ -86,6 +86,19 @@ def sort():
     inv_json = [i.to_JSON() for i in inventory]
     return {'inventory': inv_json}, 200
 
+@app.route('/api/category', methods=['POST'])
+def category():
+    accounts, inventory = _load_user_info()
+    req = flask.request.get_json(force=True)
+    cat = req.get('category')
+
+    prod = []
+    for i in inventory:
+        if cat in i.get_tags():
+            prod.append(i)
+    prod_json = [j.to_JSON() for j in prod]
+    return {'products': prod_json}, 200
+
 # @app.route('/api/refresh', methods=['POST'])
 # def refresh():
 #     """
