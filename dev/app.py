@@ -4,7 +4,7 @@ import json
 import flask
 import flask_cors
 
-from project_test import *
+from project_classes import *
 
 cors = flask_cors.CORS()
 
@@ -21,10 +21,10 @@ cors.init_app(app)
 
 def _load_user_info():
     """Load user info!"""
-    with open('accounts.obj', 'rb') as fp:
+    with open('./data/accounts.obj', 'rb') as fp:
         accounts = pickle.load(fp)
 
-    with open('inventory.obj', 'rb') as fp:
+    with open('./data/inventory.obj', 'rb') as fp:
         inventory = pickle.load(fp)
     return accounts, inventory
 
