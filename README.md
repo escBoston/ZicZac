@@ -24,7 +24,7 @@ ZicZac is an online marketplace for users to buy, sell, or trade products. ZicZa
   ├── doc
     ├── CS673_ProgressReport_team3.xlsx
     ├── CS673_T3_MeetingMinutes.docx
-    ├── Iteration 0 Presentation.pdf
+    ├── Iteration_0_Presentation.pdf
     └── T3_CS673_SPPP.docx    
   ├── team3_webapp_react
     ├── config/

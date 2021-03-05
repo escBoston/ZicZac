@@ -81,7 +81,7 @@ def sort():
     elif sort=='top':
         inventory.sort(key=Item.get_rating)
     elif sort=='price':
-        inventory.sort(key=Item.price)
+        inventory.sort(key=Item.get_price)
 
     inv_json = [i.to_JSON() for i in inventory]
     return {'inventory': inv_json}, 200
