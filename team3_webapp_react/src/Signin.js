@@ -1,5 +1,4 @@
 import {login, useAuth, logout} from "./auth"
-
 import Header from './components/Header';
 import Footer from './components/Footer';
 
