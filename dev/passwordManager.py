@@ -1,10 +1,10 @@
 # This part deals with the security of password
 class passwordManager:
-    # length should be 14 to 21, with upper and lower alphabet, numeral, and special symbol including "?", "!", "@", "#", "%", and "&".
+    # length should be 8 to 21, with upper and lower alphabet, numeral, and special symbol including "*", "&", "$", "#", "!", and "@".
     # format of output is [password, True or False, passStatus]. True or False represent password reach the requirement or not; passStatus briefly describes the specific issue.
     def formatChecking(self, password):
         # initial, boolean status determine whether conditions of upper or less; numeral; symbol are established
-        special_char = ["?", "!", "@", "#", "%", "&"]
+        special_char = ["*", "&", "$", "#", "!", "@"]
         upper_status = False
         lower_status = False
         num_status = False
@@ -21,7 +21,7 @@ class passwordManager:
             elif len(passStatus) == 0:
                 passStatus += "too long"
             condition = False
-        if len(password) < 14:
+        if len(password) < 8:
             if len(passStatus) > 0:
                 passStatus += "; too short"
             elif len(passStatus) == 0:
