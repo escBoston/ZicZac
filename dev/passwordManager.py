@@ -80,13 +80,6 @@ class passwordManager:
         condition = True
         return [password, condition, passStatus]
 
-    # to encrypt the password
-    def encode(self, password):
-        return 0
-
-    # to decrypt the password
-    def decode(self, password):
-        return 0
 
     def test(self, password):
         print("Testing...")
