@@ -14,6 +14,9 @@ function Account() {
                   <li className="nav-item">
                     <Link className="nav-link" to={"/Signup"}>Sign up</Link>
                   </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to={"/Sell"}>Sell my product</Link>
+                  </li>
                 </ul></div>
     <Footer />
     </div>
