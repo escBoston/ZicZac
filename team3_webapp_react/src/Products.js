@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from './components/Header'
 import Footer from './components/Footer'
+import Cards from "./components/ProductList";
 
 function Products(props) {
   const category = props.location.category
@@ -28,6 +29,8 @@ function Products(props) {
     <h4>Category: {category}</h4>
     {products}
     </div>
+    <p>List of products in form of cards</p>
+    <Cards/>
     <Footer />
     </div>
 
