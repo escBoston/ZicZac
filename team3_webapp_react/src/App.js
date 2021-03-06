@@ -12,8 +12,6 @@ import Deals from './Deals';
 import Home from './Home';
 import Signin from './Signin';
 import Signup from './Signup';
-import ProductDetailsShow from "./ProductDetails";
-import UploadProduct from "./Sell";
 
 function App() {
   return (
@@ -30,7 +28,7 @@ function App() {
     <Route path="/Signin" component={Signin} />
     <Route path="/Signup" component={Signup} />
     <Route path="/ProductDetails" component={ProductDetailsShow} />
-    <Route path="/Sell" component={UploadProduct} />
+<Route path="/Sell" component={UploadProduct} />
     </Switch>
 </BrowserRouter>
     </div>
