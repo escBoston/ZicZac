@@ -65,7 +65,7 @@ def signup():
         return {'message' : 'username taken'}, 200
     else:
         accounts[username] = Account(password=password, email=email)
-        file = open("accounts.obj", "wb")
+        file = open("./data/accounts.obj", "wb")
         pickle.dump(accounts, file)
         file.close()
         return {'message' : 'success'}, 200
