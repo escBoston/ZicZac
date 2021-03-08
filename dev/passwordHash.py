@@ -1,15 +1,16 @@
 import hashlib
 import uuid
+
 class passwordHash:
     # to encrypt the password by using salt and hash functions. Salt and encrypted password should be both stored on a file
     def encrypt(self, password_signup):
         salt = uuid.uuid4().hex
-        password_encrypted = hashlib.sha256(str(password_signup).encode('utf-8') + str(salt).encode('utf-8')).hexdigest()
+        password_encrypted = hashlib.sha3_512(str(password_signup).encode('utf-8') + str(salt).encode('utf-8')).hexdigest()
         return [salt, password_encrypted]
 
     # to check if the password is correct for log in
     def check_password(self, password_loginin, salt, password_encrypted):
-        if password_encrypted == hashlib.sha256(str(password_loginin).encode('utf-8') + str(salt).encode('utf-8')).hexdigest():
+        if password_encrypted == hashlib.sha3_512(str(password_loginin).encode('utf-8') + str(salt).encode('utf-8')).hexdigest():
             return True
         return False
 
