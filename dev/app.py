@@ -77,9 +77,9 @@ def sort():
     sort = req.get('sort')
 
     if sort=='recent':
-        inventory.sort(key=Item.get_date)
+        inventory.sort(key=Item.get_date, reverse=True)
     elif sort=='top':
-        inventory.sort(key=Item.get_rating)
+        inventory.sort(key=Item.get_rating, reverse=True)
     elif sort=='price':
         inventory.sort(key=Item.get_price)
 

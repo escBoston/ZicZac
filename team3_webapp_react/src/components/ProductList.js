@@ -5,15 +5,19 @@ import {Container, Form, Nav, Navbar, NavDropdown, MenuItem,  Tabs, ButtonToolba
 
 function Cards(props) {
   const products = props.prodsrc
-  const cat = props.catsrc
+  //const cat = props.catsrc
   console.log(products)
 
-  var prod0title, prod0price, prod1title, prod1price = ''
+  var prod0title, prod0price, prod1title, prod1price, prod2title, prod2price, prod3title, prod3price = ''
   if (products.length>0) {
     prod0title = JSON.parse(products[0]).title
     prod0price = parseFloat(JSON.parse(products[0]).price).toFixed(2);
     prod1title = JSON.parse(products[1]).title
     prod1price = parseFloat(JSON.parse(products[1]).price).toFixed(2);
+    prod2title = JSON.parse(products[2]).title
+    prod2price = parseFloat(JSON.parse(products[2]).price).toFixed(2);
+    prod3title = JSON.parse(products[3]).title
+    prod3price = parseFloat(JSON.parse(products[3]).price).toFixed(2);
   }
 
   return (
@@ -34,45 +38,46 @@ function Cards(props) {
             />
             <CardItem
               src=''
-              text=''
-              label={cat}
+              text={prod2title}
+              label={prod2price}
               path='/ProductDetails'
             />
 
             <CardItem
               src=''
-              text=''
-              label={cat}
+              text={prod3title}
+              label={prod3price}
               path='/ProductDetails'
             />
   </Row>
-  <Row style={{marginTop: 20}}>
-            <CardItem
-              src=''
-              text=''
-              label={cat}
-              path='/ProductDetails'
-            />
-            <CardItem
-              src=''
-              text=''
-              label={cat}
-              path='/ProductDetails'
-            />
-            <CardItem
-              src=''
-              text=''
-              label={cat}
-              path='/ProductDetails'
-            />
-            <CardItem
-              src=''
-              text=''
-              label={cat}
-              path='/ProductDetails'
-            />
-</Row>
-    </div>
+  </div>
+//   <Row style={{marginTop: 20}}>
+//             <CardItem
+//               src=''
+//               text=''
+//               label={cat}
+//               path='/ProductDetails'
+//             />
+//             <CardItem
+//               src=''
+//               text=''
+//               label={cat}
+//               path='/ProductDetails'
+//             />
+//             <CardItem
+//               src=''
+//               text=''
+//               label={cat}
+//               path='/ProductDetails'
+//             />
+//             <CardItem
+//               src=''
+//               text=''
+//               label={cat}
+//               path='/ProductDetails'
+//             />
+// </Row>
+//    </div>
   );
 }
 
