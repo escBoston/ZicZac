@@ -8,11 +8,11 @@ import Cards from "./components/ProductList";
 function Products(props) {
   const category = props.location.category
   const [products, setProducts] = useState([]);
-  console.log(category)
 
   let opts = {
     'category': category
   }
+  useEffect(() => {
   fetch('http://localhost:5000/api/category', {
     method: 'post',
     body: JSON.stringify(opts)
@@ -20,17 +20,16 @@ function Products(props) {
   .then(token => {
     setProducts(token.products)
   })
-  console.log(products)
+}, []);
 
   return (
     <div>
     <Header />
     <div className="category">
     <h4>Category: {category}</h4>
-    {products}
     </div>
     <p>List of products in form of cards</p>
-    <Cards/>
+    <Cards prodsrc={products} catsrc={category}/>
     <Footer />
     </div>
 

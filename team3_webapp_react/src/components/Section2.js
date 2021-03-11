@@ -2,6 +2,7 @@ import {login, authFetch, useAuth, logout} from "../auth"
 import React, { useEffect, useState } from "react";
 import {Form, Nav, Navbar, NavDropdown, MenuItem,  Tabs, ButtonToolbar, Button, Table, ButtonGroup, Row, Col, Grid, Panel, FormGroup, FormControl} from 'react-bootstrap';
 import Container from 'react-bootstrap/Container'
+import Cards from "./ProductList";
 
 const Section2 = () => {
   const [sort, setSort] = useState('')
@@ -48,8 +49,7 @@ const Section2 = () => {
       <button className="button" onClick={onSubmitClick} type="submit">Submit</button>
       </div>
       </form>
-      {/*TODO: add inventoryes */}
-      {inventory}
+      {<Cards prodsrc={inventory}/>}
     </div>
     }
     </div>
