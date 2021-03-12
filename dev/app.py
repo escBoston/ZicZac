@@ -20,31 +20,31 @@ app.debug = True
 # Initializes CORS so that the api_tool can talk to the example app
 cors.init_app(app)
 
-database = '../../../../sqlite/db.db'
+database = './data/db.db'
 
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(database)
-    return db
+# def get_db():
+#     db = getattr(g, '_database', None)
+#     if db is None:
+#         db = g._database = sqlite3.connect(database)
+#     return db
+#
+# def _load_user_info_2():
+#     with app.app_context():
+#         cur = get_db().cursor()
+#         cur.execute("select * from accounts")
+#         accounts = cur.fetchall()
+#         cur.execute("select * from inventory")
+#         inventory = cur.fetchall()
+#         return accounts, inventory
 
-def _load_user_info_2():
-    with app.app_context():
-        cur = get_db().cursor()
-        cur.execute("select * from accounts")
-        accounts = cur.fetchall()
-        cur.execute("select * from inventory")
-        inventory = cur.fetchall()
-        return accounts, inventory
-
-def _load_user_info():
-    """Load user info!"""
-    with open('./data/accounts.obj', 'rb') as fp:
-        accounts = pickle.load(fp)
-
-    with open('./data/inventory.obj', 'rb') as fp:
-        inventory = pickle.load(fp)
-    return accounts, inventory
+# def _load_user_info():
+#     """Load user info!"""
+#     with open('./data/accounts.obj', 'rb') as fp:
+#         accounts = pickle.load(fp)
+#
+#     with open('./data/inventory.obj', 'rb') as fp:
+#         inventory = pickle.load(fp)
+#     return accounts, inventory
 
 
 # Set up some routes for the example
@@ -58,21 +58,26 @@ def login():
     """
     Logs a user in by parsing a POST request containing user credentials.
     """
-    accounts, inventory = _load_user_info_2()
+    #accounts, inventory = _load_user_info_2()
 
     req = flask.request.get_json(force=True)
     username = req.get('username')
     password = req.get('password')
 
-    usernames = []
-    [usernames.append(a[0]) for a in accounts]
-    if username not in usernames:
-        return {'message': 'Invalid username.'}, 200
-    for a in accounts:
-        if a[0] == username:
-            message = 'Login accepted.' if a[1] == password else 'Incorrect password'
-            return {'message': message}, 200
-    return {'message': 'Invalid username.'}, 200
+    with app.app_context():
+        with sqlite3.connect(database) as con:
+            cur = con.cursor()
+            cur.execute("select * from accounts")
+            accounts = cur.fetchall()
+            usernames = []
+            [usernames.append(a[0]) for a in accounts]
+            if username not in usernames:
+                return {'message': 'Invalid username.'}, 200
+            for a in accounts:
+                if a[0] == username:
+                    message = 'Login accepted.' if a[1] == password else 'Incorrect password'
+                    return {'message': message}, 200
+            return {'message': 'Invalid username.'}, 200
 
 
 @app.route('/api/signup', methods=['POST'])
@@ -94,9 +99,17 @@ def signup():
             else:
                 cur.execute("INSERT INTO accounts (username, password, email) VALUES (?,?,?)",(username, password, email))
                 con.commit()
-                cur.execute("select * from accounts")
-                print(cur.fetchall())
                 return {'message' : 'success'}, 200
+
+def jsonify_inv(inv):
+    return [{
+        'title' : i[0],
+        'price' : i[1],
+        'description' : i[2],
+        'category' : i[3],
+        'date_added' : i[4],
+        'photo_filepath' : i[5],
+        'seller' : i[6]} for i in inv]
 
 @app.route('/api/sort', methods=['POST'])
 def sort():
@@ -111,19 +124,10 @@ def sort():
             elif sort=='price':
                 cur.execute("select * from inventory order by price")
             inv = cur.fetchall()
-            inv_json = [{
-                'title' : i[0],
-                'price' : i[1],
-                'description' : i[2],
-                'category' : i[3],
-                'date_added' : i[4],
-                'photo_filepath' : i[5],
-                'seller' : i[6]} for i in inv]
-            return {'inventory' : inv_json}, 200
+            return {'inventory' : jsonify_inv(inv)}, 200
 
 @app.route('/api/category', methods=['POST'])
 def category():
-    #accounts, inventory = _load_user_info()
     req = flask.request.get_json(force=True)
     cat = req.get('category')
     with app.app_context():
@@ -131,16 +135,7 @@ def category():
             cur = con.cursor()
             cur.execute(f"select * from inventory where category='{cat}'")
             inv = cur.fetchall()
-            inv_json = [{
-                'title' : i[0],
-                'price' : i[1],
-                'description' : i[2],
-                'category' : i[3],
-                'date_added' : i[4],
-                'photo_filepath' : i[5],
-                'seller' : i[6]} for i in inv]
-            print(inv_json)
-            return {'products' : inv_json}, 200
+            return {'products' : jsonify_inv(inv)}, 200
 
 # @app.route('/api/refresh', methods=['POST'])
 # def refresh():
