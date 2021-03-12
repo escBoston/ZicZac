@@ -14,6 +14,7 @@ function Signin() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [count, setCount] = useState(0);
+  const [failmsg, setFailMsg] = useState('')
 
   const [logged] = useAuth();
 
@@ -31,12 +32,15 @@ function Signin() {
     }).then(r => r.json())
       .then(token => {
         if (token.message === 'Login accepted.'){
-          console.log("good job.")
           login(token)
           history.push("/")
         }
-        else {
-          console.log("Please type in correct username/password")
+        else if (token.message == 'Invalid username.'){
+          setFailMsg("Invalid username.")
+          setCount(1);
+        }
+        else if (token.message == 'Incorrect password'){
+          setFailMsg("Incorrect password")
           setCount(1);
         }
       })
@@ -83,7 +87,7 @@ function Signin() {
         <button onClick={onSubmitClick} type="submit" className="btn btn-primary btn-block">
           Submit
         </button>
-      { count === 1 && <p>Your login credentials could not be verified, please try again.</p>}
+        {failmsg}
 
       {/*TODO: implement function for this */}
         <p className="forgot-password text-center">

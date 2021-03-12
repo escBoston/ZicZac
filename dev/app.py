@@ -3,6 +3,8 @@ import os
 import json
 import flask
 import flask_cors
+import sqlite3
+from flask import g
 
 from project_classes import *
 
@@ -18,6 +20,22 @@ app.debug = True
 # Initializes CORS so that the api_tool can talk to the example app
 cors.init_app(app)
 
+database = '../../../../sqlite/db.db'
+
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(database)
+    return db
+
+def _load_user_info_2():
+    with app.app_context():
+        cur = get_db().cursor()
+        cur.execute("select * from accounts")
+        accounts = cur.fetchall()
+        cur.execute("select * from inventory")
+        inventory = cur.fetchall()
+        return accounts, inventory
 
 def _load_user_info():
     """Load user info!"""
@@ -27,6 +45,7 @@ def _load_user_info():
     with open('./data/inventory.obj', 'rb') as fp:
         inventory = pickle.load(fp)
     return accounts, inventory
+
 
 # Set up some routes for the example
 @app.route('/api/')
@@ -39,65 +58,89 @@ def login():
     """
     Logs a user in by parsing a POST request containing user credentials.
     """
-    accounts, inventory = _load_user_info()
+    accounts, inventory = _load_user_info_2()
 
     req = flask.request.get_json(force=True)
     username = req.get('username')
     password = req.get('password')
 
-    if username not in accounts:
+    usernames = []
+    [usernames.append(a[0]) for a in accounts]
+    if username not in usernames:
         return {'message': 'Invalid username.'}, 200
-    elif password != accounts[username].password:
-        return {'message': 'Incorrect password.'}, 200
-    else:
-        return {'message': 'Login accepted.'}, 200
+    for a in accounts:
+        if a[0] == username:
+            message = 'Login accepted.' if a[1] == password else 'Incorrect password'
+            return {'message': message}, 200
+    return {'message': 'Invalid username.'}, 200
+
 
 @app.route('/api/signup', methods=['POST'])
 def signup():
-    accounts, inventory = _load_user_info()
-
     req = flask.request.get_json(force=True)
     email = req.get('email')
     username = req.get('username')
     password = req.get('password')
 
-    if username in accounts:
-        return {'message' : 'username taken'}, 200
-    else:
-        accounts[username] = Account(password=password, email=email)
-        file = open("./data/accounts.obj", "wb")
-        pickle.dump(accounts, file)
-        file.close()
-        return {'message' : 'success'}, 200
+    with app.app_context():
+        with sqlite3.connect(database) as con:
+            cur = con.cursor()
+            cur.execute("select * from accounts")
+            accounts = cur.fetchall()
+            usernames = []
+            [usernames.append(a[0]) for a in accounts]
+            if username in usernames:
+                return {'message' : 'username taken'}, 200
+            else:
+                cur.execute("INSERT INTO accounts (username, password, email) VALUES (?,?,?)",(username, password, email))
+                con.commit()
+                cur.execute("select * from accounts")
+                print(cur.fetchall())
+                return {'message' : 'success'}, 200
 
 @app.route('/api/sort', methods=['POST'])
 def sort():
-    accounts, inventory = _load_user_info()
     req = flask.request.get_json(force=True)
     sort = req.get('sort')
 
-    if sort=='recent':
-        inventory.sort(key=Item.get_date, reverse=True)
-    elif sort=='top':
-        inventory.sort(key=Item.get_rating, reverse=True)
-    elif sort=='price':
-        inventory.sort(key=Item.get_price)
-
-    inv_json = [i.to_JSON() for i in inventory]
-    return {'inventory': inv_json}, 200
+    with app.app_context():
+        with sqlite3.connect(database) as con:
+            cur = con.cursor()
+            if sort=='recent':
+                cur.execute("select * from inventory order by date_added desc")
+            elif sort=='price':
+                cur.execute("select * from inventory order by price")
+            inv = cur.fetchall()
+            inv_json = [{
+                'title' : i[0],
+                'price' : i[1],
+                'description' : i[2],
+                'category' : i[3],
+                'date_added' : i[4],
+                'photo_filepath' : i[5],
+                'seller' : i[6]} for i in inv]
+            return {'inventory' : inv_json}, 200
 
 @app.route('/api/category', methods=['POST'])
 def category():
-    accounts, inventory = _load_user_info()
+    #accounts, inventory = _load_user_info()
     req = flask.request.get_json(force=True)
     cat = req.get('category')
-
-    prod = []
-    for i in inventory:
-        if cat in i.get_tags():
-            prod.append(i)
-    prod_json = [j.to_JSON() for j in prod]
-    return {'products': prod_json}, 200
+    with app.app_context():
+        with sqlite3.connect(database) as con:
+            cur = con.cursor()
+            cur.execute(f"select * from inventory where category='{cat}'")
+            inv = cur.fetchall()
+            inv_json = [{
+                'title' : i[0],
+                'price' : i[1],
+                'description' : i[2],
+                'category' : i[3],
+                'date_added' : i[4],
+                'photo_filepath' : i[5],
+                'seller' : i[6]} for i in inv]
+            print(inv_json)
+            return {'products' : inv_json}, 200
 
 # @app.route('/api/refresh', methods=['POST'])
 # def refresh():
@@ -131,65 +174,3 @@ def protected():
 # Run the example
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
-# @app.route('/login')
-# def login():
-#     return render_template('login.html')
-
-# @app.route('/signup')
-# def signup():
-#     return render_template('signup.html')
-
-# @app.route('/submitsignup')
-# def submitsignup():
-#     user_input = request.args
-#     username = user_input["username"]
-
-#     acc = open("accounts.obj", 'rb')
-#     accounts = pickle.load(acc)
-#     acc.close()
-
-#     inv = open("inventory.obj",'rb')
-#     inventory = pickle.load(inv)
-#     inv.close()
-
-#     if user_input["username"] in accounts:
-#         return render_template('signup.html', message="username taken")
-#     else:
-#         accounts[username] = Account(user_input["password"])
-#         file = open("accounts.obj","wb")
-#         pickle.dump(accounts,file)
-#         file.close()
-#         return render_template('index.html', username=username, orders=accounts[username].orders, inventory=inventory)
-
-# @app.route('/submit')
-# def submit():
-#     acc = open("accounts.obj",'rb')
-#     accounts = pickle.load(acc)
-#     acc.close()
-
-#     inv = open("inventory.obj",'rb')
-#     inventory = pickle.load(inv)
-#     inv.close()
-
-#     user_input = request.args
-#     if user_input["username"] not in accounts:
-#         return render_template('login.html', message="invalid username")
-#     elif accounts[user_input["username"]].password != user_input["password"]:
-#         return render_template('login.html', message="invalid password")
-#     else:
-#         return render_template('index.html', username=user_input["username"], orders=accounts[user_input["username"]].orders, inventory=inventory)
-
-# @app.route('/index')
-# def index():
-#     inv = open("inventory.obj",'rb')
-#     inventory = pickle.load(inv)
-#     inv.close()
-
-#     sort = request.args.get('sort')
-#     if sort=='recent':
-#         inventory.sort(key=Item.get_date)
-#     elif sort=='top':
-#         inventory.sort(key=Item.get_rating)
-
-#     return render_template('index.html', inventory=inventory)

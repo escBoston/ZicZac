@@ -34,7 +34,7 @@ const Section2 = () => {
   return(
 
     <div className="section2">
-    {!logged ? <h2>Secret: log in to see </h2> :
+    {!logged ? <h2>Log in to view inventory </h2> :
     <div>
       <h4>Products</h4>
       <form className="form" action="/" method="get">
@@ -43,7 +43,6 @@ const Section2 = () => {
       <label>Sort Products:</label>
         <select name="sort" id="sort" onChange={handleSortChange} value={sort}>
           <option value="recent">Recently Added</option>
-          <option value="top">Top Rated</option>
           <option value="price">Price</option>
         </select>
       <button className="button" onClick={onSubmitClick} type="submit">Submit</button>
