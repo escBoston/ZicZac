@@ -10,6 +10,8 @@ function Signup() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
+  const [failmsg, setFailMsg] = useState('')
+
   const [logged] = useAuth();
 
   const onSubmitClick = (e) => {
@@ -32,7 +34,7 @@ function Signup() {
           history.push("/")
         }
         else {
-          console.log("username taken")
+          setFailMsg("username taken")
         }
       })
   }
@@ -65,7 +67,7 @@ function Signup() {
                     <label>Password</label>
                     <input type="password" className="form-control" placeholder="Password" onChange={handlePasswordChange} value={password}/>
                 </div>
-
+                {failmsg}
                 <button onClick={onSubmitClick} type="submit" className="btn btn-primary btn-block">
                   Submit
                 </button>
