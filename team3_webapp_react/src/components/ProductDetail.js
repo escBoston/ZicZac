@@ -55,16 +55,16 @@ function ProductDetails(props) {
       <h3>Description</h3><br/>
       <p>{description}</p>
       </Col>
-    </Row>
-    <br/>
-    <br/>
-    <br/>
-    <h3 style={{marginLeft: 30, position:"relative"}}>Sold by</h3>
-    {seller}
-    <UserProfile />
-    </Container>
-    <Footer />
-    </div>
+      </Row>
+      <br/>
+      <br/>
+      <br/>
+      <h3 style={{marginLeft: 30, position:"relative"}}>Sold by</h3>
+      {seller}
+      <UserProfile />
+      </Container>
+      <Footer />
+      </div>
 
     )
 }
