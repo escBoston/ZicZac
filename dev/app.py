@@ -55,11 +55,6 @@ def home():
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    """
-    Logs a user in by parsing a POST request containing user credentials.
-    """
-    #accounts, inventory = _load_user_info_2()
-
     req = flask.request.get_json(force=True)
     username = req.get('username')
     password = req.get('password')
@@ -69,10 +64,6 @@ def login():
             cur = con.cursor()
             cur.execute("select * from accounts")
             accounts = cur.fetchall()
-            usernames = []
-            [usernames.append(a[0]) for a in accounts]
-            if username not in usernames:
-                return {'message': 'Invalid username.'}, 200
             for a in accounts:
                 if a[0] == username:
                     message = 'Login accepted.' if a[1] == password else 'Incorrect password'
@@ -136,6 +127,28 @@ def category():
             cur.execute(f"select * from inventory where category='{cat}'")
             inv = cur.fetchall()
             return {'products' : jsonify_inv(inv)}, 200
+
+def jsonify_item(i):
+    return {
+        'title' : i[0],
+        'price' : i[1],
+        'description' : i[2],
+        'category' : i[3],
+        'date_added' : i[4],
+        'photo_filepath' : i[5],
+        'seller' : i[6]
+        }
+
+@app.route('/api/get_item', methods=['POST'])
+def get_item():
+    req = flask.request.get_json(force=True)
+    title = req.get('title')
+    with app.app_context():
+        with sqlite3.connect(database) as con:
+            cur = con.cursor()
+            cur.execute(f"select * from inventory where title='{title}'")
+            item = cur.fetchall()
+            return {'item' : jsonify_inv(item)}, 200
 
 # @app.route('/api/refresh', methods=['POST'])
 # def refresh():

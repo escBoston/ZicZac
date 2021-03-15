@@ -12,7 +12,7 @@ import Deals from './Deals';
 import Home from './Home';
 import Signin from './Signin';
 import Signup from './Signup';
-import ProductDetailsShow from "./ProductDetails";
+import ProductDetails from "./components/ProductDetail";
 import UploadProduct from "./Sell";
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
     <Route path="/Account" component={Account} />
     <Route path="/Signin" component={Signin} />
     <Route path="/Signup" component={Signup} />
-    <Route path="/ProductDetails" component={ProductDetailsShow} />
+    <Route path="/ProductDetails" component={ProductDetails} />
     <Route path="/Sell" component={UploadProduct} />
     </Switch>
 </BrowserRouter>

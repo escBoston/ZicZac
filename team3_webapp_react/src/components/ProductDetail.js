@@ -1,38 +1,71 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Dropzone from "react-dropzone";
 import {Container, Form, Nav, Navbar, NavDropdown, MenuItem,  Tabs, ButtonToolbar, Button, Table, ButtonGroup, Row, Col, Grid, Panel, FormGroup, FormControl} from 'react-bootstrap';
 import UserProfile from "./UserProfile";
 import CardItem from './Card';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import Header from './Header'
+import Footer from './Footer'
 
 
 function ProductDetails(props) {
+    const history = useHistory();
+    const location = useLocation();
+    const title = props.location.title
+    const [item, setItem] = useState();
+    var price, description, seller = ''
 
+    let opts = {
+      'title': title
+    }
+
+    useEffect(() => {
+    fetch('http://localhost:5000/api/get_item', {
+      method: 'post',
+      body: JSON.stringify(opts)
+    }).then(r => r.json())
+    .then(token => {
+      setItem(token.item[0])
+    })
+    }, []);
+
+    console.log(item)
+    if (typeof item != 'undefined') {
+      price = parseFloat(item.price).toFixed(2)
+      description = item.description
+      seller = item.seller
+    }
 
     return (
+      <div>
+      <Header />
       <Container>
-      <h2 style={{marginLeft: 20, position:"relative"}}>Title</h2>
+      <h2 style={{marginLeft: 20, position:"relative"}}>{title}</h2>
       <Row>
       <Col xs={6}>
       <CardItem
         src=''
-        text='PriceValue'
-        label='Category'
+        text=''
+        label={price}
         path='/services'
       />
       </Col>
       <Col xs={6}>
-<h3>Description</h3>
-<br/>
-<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus</p>
-
+      <h3>Description</h3><br/>
+      <p>{description}</p>
       </Col>
-</Row>
-<br/>
-<br/>
-<br/>
-<h3 style={{marginLeft: 30, position:"relative"}}>Sold by</h3>
-<UserProfile />
-</Container>
+    </Row>
+    <br/>
+    <br/>
+    <br/>
+    <h3 style={{marginLeft: 30, position:"relative"}}>Sold by</h3>
+    {seller}
+    <UserProfile />
+    </Container>
+    <Footer />
+    </div>
+
     )
 }
 
