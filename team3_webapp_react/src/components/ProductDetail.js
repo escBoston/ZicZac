@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import Dropzone from "react-dropzone";
-import {Container, Form, Nav, Navbar, NavDropdown, MenuItem,  Tabs, ButtonToolbar, Button, Table, ButtonGroup, Row, Col, Grid, Panel, FormGroup, FormControl} from 'react-bootstrap';
+import {Container, Form, Nav, Navbar, NavDropdown, MenuItem,  Tabs, ButtonToolbar, Table, ButtonGroup, Row, Col, Grid, Panel, FormGroup, FormControl} from 'react-bootstrap';
 import UserProfile from "./UserProfile";
 import CardItem from './Card';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Header from './Header'
 import Footer from './Footer'
+import UserProfile_small from "./UserProfile_small";
+import { Button, Icon, Label } from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css'
 
 
 function ProductDetails(props) {
@@ -55,14 +58,43 @@ function ProductDetails(props) {
       <Col xs={6}>
       <h3>Description</h3><br/>
       <p>{description}</p>
+      <Button as='div' labelPosition='right'>
+<Button
+  color='red'
+  content='Like'
+  icon='heart'
+  label={{ basic: true, color: 'red', pointing: 'left', content: '2,048' }}
+/>
+
+<Button basic color='red'
+  content='Chat'
+  icon='wechat'
+/>
+
+<Button
+  color='red'
+  content='Add to Cart'
+  icon='cart plus'
+/>
+
+
+      </Button>
+      <Row>
+<Col xs={3}>
+</Col>
+<Col xs={3} className="product_details_sold">
+<h5>SOLD BY</h5>
+</Col>
+
+  <Col xs={2}>
+{seller} <UserProfile_small />
+</Col>
+</Row>
       </Col>
       </Row>
       <br/>
       <br/>
       <br/>
-      <h3 style={{marginLeft: 30, position:"relative"}}>Sold by</h3>
-      {seller}
-      <UserProfile />
       </Container>
       <Footer />
       </div>
