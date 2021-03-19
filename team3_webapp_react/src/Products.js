@@ -28,7 +28,7 @@ function Products(props) {
     <div className="category">
     <h4>Category: {category}</h4>
     </div>
-    <p>List of products in form of cards</p>
+    <p>Available products</p>
     <Cards prodsrc={products} catsrc={category}/>
     <Footer />
     </div>

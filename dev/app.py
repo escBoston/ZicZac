@@ -150,6 +150,25 @@ def get_item():
             item = cur.fetchall()
             return {'item' : jsonify_inv(item)}, 200
 
+# @app.route('/api/get_imgs', methods=['POST'])
+# def get_imgs():
+#     req = flask.request.get_json(force=True)
+#     titles = req.get('titles')
+#     imgs = []
+#     with app.app_context():
+#         with sqlite3.connect(database) as con:
+#             cur = con.cursor()
+#             cur.execute(f"select photo_filepath from inventory where title in ('{titles[0]}')")
+#             imgs.append(cur.fetchall())
+#             cur.execute(f"select photo_filepath from inventory where title in ('{titles[1]}')")
+#             imgs.append(cur.fetchall())
+#             cur.execute(f"select photo_filepath from inventory where title in ('{titles[2]}')")
+#             imgs.append(cur.fetchall())
+#             cur.execute(f"select photo_filepath from inventory where title in ('{titles[3]}')")
+#             imgs.append(cur.fetchall())
+#             imgs = [img[0] for img in imgs]
+#             return {'imgs' : imgs}, 200
+
 # @app.route('/api/refresh', methods=['POST'])
 # def refresh():
 #     """
