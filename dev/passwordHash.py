@@ -1,6 +1,9 @@
 import hashlib
 import uuid
 import random
+from passlib.hash import pbkdf2_sha512
+
+# The passlib package should be installed before running
 
 class passwordHash:
     # to encrypt the password by using salt and hash functions. Salt, encrypted password, and hash_round should be both stored on a file
@@ -13,6 +16,10 @@ class passwordHash:
         for i in range(hash_round):
             password_encrypted = hashlib.sha3_512(str(password_encrypted).encode('utf-8')).hexdigest()
         password_encrypted += str(hash_round)
+
+        # pbkdf2
+        password_encrypted = pbkdf2_sha512.hash(password_encrypted, rounds=hash_round, salt=bytes(salt, encoding='utf8'))
+
         return [salt, password_encrypted, hash_round]
 
     # to check if the password is correct for log in
@@ -21,9 +28,13 @@ class passwordHash:
         for i in range(hash_round):
             password_test = hashlib.sha3_512(str(password_test).encode('utf-8')).hexdigest()
         password_test += str(hash_round)
+        # pbkdf2
+        password_test = pbkdf2_sha512.hash(password_test, rounds=hash_round, salt=bytes(salt, encoding='utf8'))
+
         if password_test == password_encrypted:
             return True
         return False
+
 
     # test
     def test(self, password_signup, password_login):
