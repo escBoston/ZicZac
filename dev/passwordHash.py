@@ -37,18 +37,16 @@ class passwordHash:
 
 
     # test
-    def test(self, password_signup, password_login):
+    def test(self, password_signup, password_loginin):
         raw_list = passwordHash().encrypt(password_signup)
         salt = raw_list[0]
         password_encrypted = raw_list[1]
-        hash_round = raw_list[2]
         print("Salt: " + salt)
-        print("Hashing rounds: " + str(hash_round))
         print("Encrypted password: " + password_encrypted)
-        print("Checking password: " + str(passwordHash().check_password(password_login, salt, hash_round, password_encrypted)))
+        print("Checking password: " + str(passwordHash().check_password(password_loginin, salt, password_encrypted)))
 
 if __name__ == "__main__":
     password_signup = input("Enter your password for sign up: ")
-    password_login = input("Enter your password for login in: ")
-    passwordHash().test(password_signup, password_login)
+    password_loginin = input("Enter your password for login in: ")
+    passwordHash().test(password_signup, password_loginin)
 
