@@ -34,7 +34,7 @@ const Section2 = () => {
   return(
 
     <div className="section2">
-    {!logged ? <h2>Log in to view inventory </h2> :
+
     <div>
       <h4>Products</h4>
       <form className="form" action="/" method="get">
@@ -50,7 +50,7 @@ const Section2 = () => {
       </form>
       {<Cards prodsrc={inventory}/>}
     </div>
-    }
+    
     </div>
   )
 }
