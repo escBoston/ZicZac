@@ -150,6 +150,17 @@ def get_item():
             item = cur.fetchall()
             return {'item' : jsonify_inv(item)}, 200
 
+@app.route('/api/search', methods=['POST'])
+def search():
+    req = flask.request.get_json(force=True)
+    query = req.get('query')
+    with app.app_context():
+        with sqlite3.connect(database) as con:
+            cur = con.cursor()
+            cur.execute(f"select * from inventory where title like '%{query}%' or description like '%{query}%'")
+            items = cur.fetchall()
+            return {'items' : jsonify_inv(items)}, 200
+
 # @app.route('/api/get_imgs', methods=['POST'])
 # def get_imgs():
 #     req = flask.request.get_json(force=True)

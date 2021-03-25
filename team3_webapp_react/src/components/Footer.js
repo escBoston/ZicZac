@@ -12,21 +12,21 @@ const Footerpage = () => {
   return (
     <footer
         className="text-center text-white"
-        classname="footer-container"
+        className="footer-container"
         style={{
           backgroundColor: "#363b3f",
           padding: "8% 15%",
           width: "100%"
         }}
       >
-        <div classname="container">
+        <div className="container">
           <div className="row">
             <div className="col-sm-2 col-md-3 item">
               <img src={logo} width="100" height="100" />
               <br />
               <br />
               <button
-                classname="button"
+                className="button"
                 style={{
                   border: "2px solid grey",
                   borderRadius: "10%",
@@ -63,7 +63,7 @@ const Footerpage = () => {
               <br />
               <Link to="../Signup">
               <button
-                classname="button"
+                className="button"
 
                 style={{
                   border: "2px solid grey",
@@ -86,7 +86,7 @@ const Footerpage = () => {
                 }}
               >
                 <div
-                  classname="footer-copyright text-center py-3"
+                  className="footer-copyright text-center py-3"
                   style={{
                     color: "gold"
                   }}
