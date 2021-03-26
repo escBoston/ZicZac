@@ -25,6 +25,7 @@ const Footerpage = () => {
               <img src={logo} width="100" height="100" />
               <br />
               <br />
+              <Link to="../ContactUs">
               <button
                 classname="button"
                 style={{
@@ -38,6 +39,7 @@ const Footerpage = () => {
               >
                 Contact Us!
               </button>
+              </Link>
             </div>
             <div className="col-sm-2 col-md-3 item">
               <div
