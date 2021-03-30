@@ -106,14 +106,13 @@ const Footerpage = () => {
                   >
                     :
                   </span>
-                  <a
-                    href="#"
+                  <span
                     style={{
                       color: "orange"
                     }}
                   >
-                    ziczac.com
-                  </a>
+                    &nbsp;ziczac
+                  </span>
                 </div>
               </small>
 
