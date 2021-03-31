@@ -1,6 +1,7 @@
 import pickle
 import os
 import json
+import arrow
 import flask
 import flask_cors
 import sqlite3
@@ -100,7 +101,9 @@ def jsonify_inv(inv):
         'category' : i[3],
         'date_added' : i[4],
         'photo_filepath' : i[5],
-        'seller' : i[6]} for i in inv]
+        'seller' : i[6],
+        'state' : i[7],
+        'photo' : i[8]} for i in inv]
 
 @app.route('/api/sort', methods=['POST'])
 def sort():
@@ -136,7 +139,9 @@ def jsonify_item(i):
         'category' : i[3],
         'date_added' : i[4],
         'photo_filepath' : i[5],
-        'seller' : i[6]
+        'seller' : i[6],
+        'state' : i[7],
+        'photo' : i[8]
         }
 
 @app.route('/api/get_item', methods=['POST'])
@@ -160,6 +165,25 @@ def search():
             cur.execute(f"select * from inventory where title like '%{query}%' or description like '%{query}%'")
             items = cur.fetchall()
             return {'items' : jsonify_inv(items)}, 200
+
+@app.route('/api/post_product', methods=['POST'])
+def post_product():
+    req = flask.request.get_json(force=True)
+    title = req.get('title')
+    price = req.get('price')
+    description = req.get('description')
+    category = req.get('category')
+    date_added = arrow.now().format('YYYY-MM-DD')
+    photo_filepath = f"/img/{title}.jpg"
+    seller = req.get('seller')
+    state = req.get('state')
+    image = req.get('image')
+    with app.app_context():
+        with sqlite3.connect(database) as con:
+            cur = con.cursor()
+            cur.execute(f"insert into inventory (title, price, description, category, date_added, photo_filepath, seller, state, photo) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", (title, price, description, category, date_added, photo_filepath, seller, state, image))
+            con.commit()
+            return {'message' : 'success'}, 200
 
 # @app.route('/api/get_imgs', methods=['POST'])
 # def get_imgs():

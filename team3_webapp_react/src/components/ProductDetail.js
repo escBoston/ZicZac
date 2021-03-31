@@ -17,7 +17,7 @@ function ProductDetails(props) {
     const location = useLocation();
     const title = props.location.title
     const [item, setItem] = useState();
-    var price, description, seller, img = ''
+    var price, description, seller, img, state = ''
 
     let opts = {
       'title': title
@@ -38,7 +38,8 @@ function ProductDetails(props) {
       price = parseFloat(item.price).toFixed(2)
       description = item.description
       seller = item.seller
-      img = item.photo_filepath
+      img = item.photo
+      state = item.state
     }
 
     return (
@@ -58,6 +59,8 @@ function ProductDetails(props) {
       <Col xs={6}>
       <h3>Description</h3><br/>
       <p>{description}</p>
+      <h3>State</h3><br/>
+      <p>{state}</p>
       <Button as='div' labelPosition='right'>
 <Button
   color='red'
