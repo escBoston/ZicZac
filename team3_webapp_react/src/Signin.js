@@ -8,7 +8,7 @@ import {
   useHistory
 } from "react-router-dom";
 
-function Signin() {
+function Signin(props) {
   let history = useHistory();
 
   const [username, setUsername] = useState('')
@@ -20,18 +20,18 @@ function Signin() {
 
   const onSubmitClick = (e)=>{
     e.preventDefault()
-    console.log("You pressed login")
     let opts = {
       'username': username,
       'password': password
     }
-    console.log(opts)
+
     fetch('http://localhost:5000/api/login', {
       method: 'post',
       body: JSON.stringify(opts)
     }).then(r => r.json())
       .then(token => {
         if (token.message === 'Login accepted.'){
+          localStorage.setItem('user', username)
           login(token)
           history.push("/")
         }

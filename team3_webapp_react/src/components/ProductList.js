@@ -22,7 +22,7 @@ function Cards(props) {
       titles[i] = products[i].title
       paths[i] = `ProductDetails/${products[i].title}`
       prices[i] = parseFloat(products[i].price).toFixed(2);
-      imgs[i] = products[i].photo_filepath
+      imgs[i] = products[i].photo
     }
   }
 
