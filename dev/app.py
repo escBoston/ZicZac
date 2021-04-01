@@ -8,6 +8,8 @@ import sqlite3
 from flask import g
 
 from project_classes import *
+from passwordManager import *
+from passwordHash import *
 
 cors = flask_cors.CORS()
 
@@ -38,15 +40,6 @@ database = './data/db.db'
 #         inventory = cur.fetchall()
 #         return accounts, inventory
 
-# def _load_user_info():
-#     """Load user info!"""
-#     with open('./data/accounts.obj', 'rb') as fp:
-#         accounts = pickle.load(fp)
-#
-#     with open('./data/inventory.obj', 'rb') as fp:
-#         inventory = pickle.load(fp)
-#     return accounts, inventory
-
 
 # Set up some routes for the example
 @app.route('/api/')
@@ -59,6 +52,7 @@ def login():
     req = flask.request.get_json(force=True)
     username = req.get('username')
     password = req.get('password')
+    ph = passwordHash()
 
     with app.app_context():
         with sqlite3.connect(database) as con:
@@ -67,7 +61,7 @@ def login():
             accounts = cur.fetchall()
             for a in accounts:
                 if a[0] == username:
-                    message = 'Login accepted.' if a[1] == password else 'Incorrect password'
+                    message = 'Login accepted.' if ph.check_password(password, a[2], a[3]) else 'Incorrect password'
                     return {'message': message}, 200
             return {'message': 'Invalid username.'}, 200
 
@@ -79,6 +73,13 @@ def signup():
     username = req.get('username')
     password = req.get('password')
 
+    pm = passwordManager()
+    if (not pm.formatChecking(password)[1]):
+        return {'message' : 'password requirements not met'}, 200
+
+    ph = passwordHash()
+    salt, password_enc = ph.encrypt(password)
+
     with app.app_context():
         with sqlite3.connect(database) as con:
             cur = con.cursor()
@@ -89,7 +90,7 @@ def signup():
             if username in usernames:
                 return {'message' : 'username taken'}, 200
             else:
-                cur.execute("INSERT INTO accounts (username, password, email) VALUES (?,?,?)",(username, password, email))
+                cur.execute("INSERT INTO accounts (username, email, salt, password_enc) VALUES (?,?,?,?)",(username, email, salt, password_enc))
                 con.commit()
                 return {'message' : 'success'}, 200
 
