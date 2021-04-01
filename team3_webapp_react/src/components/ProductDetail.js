@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Header from './Header'
 import Footer from './Footer'
-import UserProfile_small from "./UserProfile_small";
 import { Button, Icon, Label } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 
@@ -90,7 +89,7 @@ function ProductDetails(props) {
 </Col>
 
   <Col xs={2}>
-{seller} <UserProfile_small />
+{seller} <UserProfile width={80} height={80} size={12}/>
 </Col>
 </Row>
       </Col>
