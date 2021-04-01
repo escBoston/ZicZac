@@ -82,6 +82,7 @@ class Login(MethodResource, Resource):
         req = flask.request.get_json(force=True)
         username = req.get('username')
         password = req.get('password')
+        ph = passwordHash()
 
         with app.app_context():
             with sqlite3.connect(database) as con:
@@ -90,7 +91,7 @@ class Login(MethodResource, Resource):
                 accounts = cur.fetchall()
                 for a in accounts:
                     if a[0] == username:
-                        message = 'Login accepted.' if a[1] == password else 'Incorrect password'
+                        message = 'Login accepted.' if ph.check_password(password, a[2], a[3]) else 'Incorrect password'
                         return {'message': message}, 200
                 return {'message': 'Invalid username.'}, 200
 
