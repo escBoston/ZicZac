@@ -4,7 +4,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import UploadProductPage from "./components/UploadProduct";
 
-function UploadProduct() {
+function UploadProduct(props) {
   return (
     <div>
     <Header />
