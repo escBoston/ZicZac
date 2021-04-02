@@ -23,15 +23,8 @@ class passwordHash:
         return [salt, password_encrypted, hash_round]
 
     # to check if the password is correct for log in
-    def check_password(self, password_login, salt, hash_round, password_encrypted):
-        password_test = hashlib.sha3_512(str(password_login).encode('utf-8') + str(salt).encode('utf-8')).hexdigest()
-        for i in range(hash_round):
-            password_test = hashlib.sha3_512(str(password_test).encode('utf-8')).hexdigest()
-        password_test += str(hash_round)
-        # pbkdf2
-        password_test = pbkdf2_sha512.hash(password_test, rounds=hash_round, salt=bytes(salt, encoding='utf8'))
-
-        if password_test == password_encrypted:
+    def check_password(self, password_loginin, salt, password_encrypted):
+        if password_encrypted == hashlib.sha3_512(str(password_loginin).encode('utf-8') + str(salt).encode('utf-8')).hexdigest():
             return True
         return False
 
