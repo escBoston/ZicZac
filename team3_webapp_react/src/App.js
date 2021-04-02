@@ -23,7 +23,7 @@ function App() {
 <BrowserRouter>
     <Switch>
     <Route exact path="/">
-    <Redirect to="/Home" /></Route>
+    <Redirect to="/Home" component={Home}/></Route>
     <Route path="/Home" component={Home} />
     <Route path="/Deals" component={Deals} />
     <Route path="/Products" component={Products} />

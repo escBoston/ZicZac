@@ -13,7 +13,11 @@ class UserProfile extends React.Component {
             profileImage:this.props.profileImage,
             msg:this.props.msg,
             uploadedFile:null,
-            rating:"test"//this.props.rating
+            rating:"test",//this.props.rating
+            width: this.props.weight,
+            height: this.props.height,
+            size: this.props.size
+
         }
     }
 
@@ -32,15 +36,17 @@ render(){
     }else{
          profilePic=DefaultUserPic;
     }
+  //  const styles = {width: this.state.width, height: this.state.height, borderRadius: 400/ 2};
 
     return (
+
         <Container>
         <Row style={{width: 500, marginTop: 50}}>
        <Col>
        <img src={profilePic} alt="profils pic"
-       style={{width: 150, height: 150, borderRadius: 400/ 2}} />
+       style={{width: this.state.width, height: this.state.height, borderRadius: 400/ 2}} />
        <p>{this.state.username}</p>
-       <BeautyStars
+       <BeautyStars size={this.state.size}
          value={this.state.rating}
        />
        </Col>

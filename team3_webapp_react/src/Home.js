@@ -8,11 +8,13 @@ import Section2 from './components/Section2';
 import Section3 from './components/Section3';
 import Section4 from './components/Section4';
 import ProductDetails from './components/ProductDetail'
+import UploadProduct from './components/UploadProduct'
 import Account from './Account';
 import Products from './Products';
 import Deals from './Deals';
+import Sell from './Sell';
 
-function Home() {
+function Home(props) {
   return (
     <div className="App">
     <Header />
@@ -25,10 +27,12 @@ function Home() {
 
 <BrowserRouter>
     <Switch>
+    <Route path="/Account" component={Account} />
     <Route path="/Deals" component={Deals} />
     <Route path="/Products" component={Products} />
     <Route path="/ProductDetails" component={ProductDetails} />
     <Route path="/Account" component={Account} />
+    <Route path="/Sell" component={Sell} />
     </Switch>
 </BrowserRouter>
     </div>

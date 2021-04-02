@@ -33,8 +33,11 @@ function Signup() {
           login(token)
           history.push("/")
         }
-        else {
+        else if (token.message == 'username taken') {
           setFailMsg("username taken")
+        }
+        else if (token.message == 'password requirements not met') {
+          setFailMsg("password requirements not met!")
         }
       })
   }
@@ -67,6 +70,7 @@ function Signup() {
                     <label>Password</label>
                     <input type="password" className="form-control" placeholder="Password" onChange={handlePasswordChange} value={password}/>
                 </div>
+                <p>length should be 8 to 21, with upper and lower alphabet, numeral, and special symbol including "*", "&", "$", "#", "!", and "@".</p>
                 {failmsg}
                 <button onClick={onSubmitClick} type="submit" className="btn btn-primary btn-block">
                   Submit
