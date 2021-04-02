@@ -1,12 +1,24 @@
 import pickle
 import os
 import json
+import arrow
 import flask
 import flask_cors
 import sqlite3
 from flask import g
 
 from project_classes import *
+from passwordManager import *
+from passwordHash import *
+
+from flask_restful import Resource, Api
+from apispec import APISpec
+from marshmallow import Schema, fields
+from apispec.ext.marshmallow import MarshmallowPlugin
+from flask_apispec.extension import FlaskApiSpec
+from flask_apispec.views import MethodResource
+from flask_apispec import marshal_with, doc, use_kwargs
+
 
 cors = flask_cors.CORS()
 
@@ -37,14 +49,24 @@ database = './data/db.db'
 #         inventory = cur.fetchall()
 #         return accounts, inventory
 
-# def _load_user_info():
-#     """Load user info!"""
-#     with open('./data/accounts.obj', 'rb') as fp:
-#         accounts = pickle.load(fp)
-#
-#     with open('./data/inventory.obj', 'rb') as fp:
-#         inventory = pickle.load(fp)
-#     return accounts, inventory
+#setting up swagger api
+api = Api(app)
+app.config.update({
+    'APISPEC_SPEC': APISpec(
+        title='Test',
+        version='v1',
+        plugins=[MarshmallowPlugin()],
+        openapi_version='2.0.0'
+    ),
+    'APISPEC_SWAGGER_URL': '/swagger/',  # URI to access API Doc JSON
+    'APISPEC_SWAGGER_UI_URL': '/swagger-ui/'  # URI to access UI of API Doc
+})
+docs = FlaskApiSpec(app)
+class ResponseSchema(Schema):
+    message = fields.Str(default='Success')
+class RequestSchema(Schema):
+    api_type = fields.String(required=True, description="test")
+
 
 
 # Set up some routes for the example
@@ -53,44 +75,62 @@ def home():
     return {"Hello": "World"}, 200
 
 
-@app.route('/api/login', methods=['POST'])
-def login():
-    req = flask.request.get_json(force=True)
-    username = req.get('username')
-    password = req.get('password')
+class Login(MethodResource, Resource):
+    @doc(description='login', tags=['login'])
+    @marshal_with(ResponseSchema)  # marshalling
+    def post(self):
+        req = flask.request.get_json(force=True)
+        username = req.get('username')
+        password = req.get('password')
+        ph = passwordHash()
 
-    with app.app_context():
-        with sqlite3.connect(database) as con:
-            cur = con.cursor()
-            cur.execute("select * from accounts")
-            accounts = cur.fetchall()
-            for a in accounts:
-                if a[0] == username:
-                    message = 'Login accepted.' if a[1] == password else 'Incorrect password'
-                    return {'message': message}, 200
-            return {'message': 'Invalid username.'}, 200
+        with app.app_context():
+            with sqlite3.connect(database) as con:
+                cur = con.cursor()
+                cur.execute("select * from accounts")
+                accounts = cur.fetchall()
+                for a in accounts:
+                    if a[0] == username:
+                        message = 'Login accepted.' if ph.check_password(password, a[2], a[3]) else 'Incorrect password'
+                        return {'message': message}, 200
+                return {'message': 'Invalid username.'}, 200
+
+api.add_resource(Login, '/api/login')
+docs.register(Login)
 
 
-@app.route('/api/signup', methods=['POST'])
-def signup():
-    req = flask.request.get_json(force=True)
-    email = req.get('email')
-    username = req.get('username')
-    password = req.get('password')
 
-    with app.app_context():
-        with sqlite3.connect(database) as con:
-            cur = con.cursor()
-            cur.execute("select * from accounts")
-            accounts = cur.fetchall()
-            usernames = []
-            [usernames.append(a[0]) for a in accounts]
-            if username in usernames:
-                return {'message' : 'username taken'}, 200
-            else:
-                cur.execute("INSERT INTO accounts (username, password, email) VALUES (?,?,?)",(username, password, email))
-                con.commit()
-                return {'message' : 'success'}, 200
+class Signup(MethodResource, Resource):
+    def post(self):
+        req = flask.request.get_json(force=True)
+        email = req.get('email')
+        username = req.get('username')
+        password = req.get('password')
+
+        pm = passwordManager()
+        if (not pm.formatChecking(password)[1]):
+            return {'message' : 'password requirements not met'}, 200
+
+        ph = passwordHash()
+        salt, password_enc = ph.encrypt(password)
+
+        with app.app_context():
+            with sqlite3.connect(database) as con:
+                cur = con.cursor()
+                cur.execute("select * from accounts")
+                accounts = cur.fetchall()
+                usernames = []
+                [usernames.append(a[0]) for a in accounts]
+                if username in usernames:
+                    return {'message' : 'username taken'}, 200
+                else:
+                    cur.execute("INSERT INTO accounts (username, email, salt, password_enc) VALUES (?,?,?,?)",(username, email, salt, password_enc))
+                    con.commit()
+                    return {'message' : 'success'}, 200
+
+api.add_resource(Signup, '/api/signup')
+docs.register(Signup)
+
 
 def jsonify_inv(inv):
     return [{
@@ -100,7 +140,9 @@ def jsonify_inv(inv):
         'category' : i[3],
         'date_added' : i[4],
         'photo_filepath' : i[5],
-        'seller' : i[6]} for i in inv]
+        'seller' : i[6],
+        'state' : i[7],
+        'photo' : i[8]} for i in inv]
 
 @app.route('/api/sort', methods=['POST'])
 def sort():
@@ -117,16 +159,22 @@ def sort():
             inv = cur.fetchall()
             return {'inventory' : jsonify_inv(inv)}, 200
 
-@app.route('/api/category', methods=['POST'])
-def category():
-    req = flask.request.get_json(force=True)
-    cat = req.get('category')
-    with app.app_context():
-        with sqlite3.connect(database) as con:
-            cur = con.cursor()
-            cur.execute(f"select * from inventory where category='{cat}'")
-            inv = cur.fetchall()
-            return {'products' : jsonify_inv(inv)}, 200
+class SelectCategory(MethodResource, Resource):
+    @doc(description='getting categories', tags=['getting_categories'])
+    #@marshal_with(ResponseSchema)  # marshalling
+    def post(self):
+        req = flask.request.get_json(force=True)
+        cat = req.get('category')
+        with app.app_context():
+            with sqlite3.connect(database) as con:
+                cur = con.cursor()
+                cur.execute(f"select * from inventory where category='{cat}'")
+                inv = cur.fetchall()
+                return {'products' : jsonify_inv(inv)}, 200
+
+
+api.add_resource(SelectCategory, '/api/category')
+docs.register(SelectCategory)
 
 def jsonify_item(i):
     return {
@@ -136,7 +184,9 @@ def jsonify_item(i):
         'category' : i[3],
         'date_added' : i[4],
         'photo_filepath' : i[5],
-        'seller' : i[6]
+        'seller' : i[6],
+        'state' : i[7],
+        'photo' : i[8]
         }
 
 @app.route('/api/get_item', methods=['POST'])
@@ -160,6 +210,25 @@ def search():
             cur.execute(f"select * from inventory where title like '%{query}%' or description like '%{query}%'")
             items = cur.fetchall()
             return {'items' : jsonify_inv(items)}, 200
+
+@app.route('/api/post_product', methods=['POST'])
+def post_product():
+    req = flask.request.get_json(force=True)
+    title = req.get('title')
+    price = req.get('price')
+    description = req.get('description')
+    category = req.get('category')
+    date_added = arrow.now().format('YYYY-MM-DD')
+    photo_filepath = f"/img/{title}.jpg"
+    seller = req.get('seller')
+    state = req.get('state')
+    image = req.get('image')
+    with app.app_context():
+        with sqlite3.connect(database) as con:
+            cur = con.cursor()
+            cur.execute(f"insert into inventory (title, price, description, category, date_added, photo_filepath, seller, state, photo) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", (title, price, description, category, date_added, photo_filepath, seller, state, image))
+            con.commit()
+            return {'message' : 'success'}, 200
 
 # @app.route('/api/get_imgs', methods=['POST'])
 # def get_imgs():
