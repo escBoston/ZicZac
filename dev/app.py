@@ -112,7 +112,7 @@ class Signup(MethodResource, Resource):
             return {'message' : 'password requirements not met'}, 200
 
         ph = passwordHash()
-        salt, password_enc, hash_round = ph.encrypt(password)
+        salt, password_enc = ph.encrypt(password)
 
         with app.app_context():
             with sqlite3.connect(database) as con:
