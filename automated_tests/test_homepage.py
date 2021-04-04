@@ -38,14 +38,14 @@ class homepagetest(unittest.TestCase):
 
         #checking to see if the error message displayed when the username enters incorrect password
         
-        #username=self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div/div/div[1]/input')
-        #username.value = "pakbiyik"
-        #password=self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div/div/div[2]/input')
-        #password.value = "UN#LMLK99"
-        #self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div/div/button').click
-        #expr3 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div/div').text
-        #self.assertEqual(expr3, "Invalid username.")
-        #time.sleep(1)
+        username=self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div/div/div[1]/input')
+        username.send_keys("pakbiyik")
+        password=self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div/div/div[2]/input')
+        password.send_keys("UN#LMLK99")
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div/div/button').click
+        expr3 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div/div').text
+        self.assertEqual(expr3, "Invalid username.")
+        time.sleep(1)
 
         #checking sell you product button
         self.driver.find_element_by_xpath(
@@ -54,6 +54,16 @@ class homepagetest(unittest.TestCase):
         expr4 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div/div/div[2]/h2').text
         print(expr4)
         self.assertEqual(expr4, 'Sell Your Product')
+        time.sleep(1)
+         #checking sorting feature on homepage
+         sorting=self.driver.find_element_by_xpath('//*[@id="sort"])
+         sorting.send_keys("Price")
+         self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[2]/div/form/div/button').click()
+         price = ["5","8","9","10"]
+         priceCopy=price
+         priceCopy= sort()
+         self.assertEqual(price, priceCopy)
+        
         time.sleep(1)
 
 
