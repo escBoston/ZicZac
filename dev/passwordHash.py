@@ -20,7 +20,7 @@ class passwordHash:
         # pbkdf2
         password_encrypted = pbkdf2_sha512.hash(password_encrypted, rounds=hash_round, salt=bytes(salt, encoding='utf8'))
 
-        return [salt, password_encrypted, hash_round]
+        return (salt, password_encrypted, hash_round)
 
     # to check if the password is correct for log in
     def check_password(self, password_loginin, salt, password_encrypted):
