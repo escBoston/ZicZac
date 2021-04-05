@@ -60,7 +60,108 @@ class homepagetest(unittest.TestCase):
         self.assertEqual(expr1, "lamp")
         time.sleep(1)
 
+    def test_clothingbutton(self):
+ 
+  # checking to see if clothing botton works 
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div/div[1]/li[1]/button/div/h5').click()
+        expr6 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/h4').text
+        print(expr6)
+        self.assertEqual(expr6, "Category: clothing")
+        time.sleep(1)
+
+    def test_furniturebutton(self):
+        # checking to see if furniture botton works 
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div/div[1]/li[2]/button/div/h5').click()
+        expr7 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/h4').text
+        print(expr7)
+        self.assertEqual(expr7, "Category: furniture")
+        time.sleep(1)
     
+    def test_electronicsbutton(self):
+         # checking to see if electronics botton works 
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div/div[1]/li[3]/button/div/h5').click()
+        expr8 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/h4').text
+        print(expr8)
+        self.assertEqual(expr8, "Category: furniture")
+        time.sleep(1)
+
+    def test_vechilesbutton(self):
+         # checking to see if vechiles botton works 
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div/div[1]/li[4]/button/div/h5').click()
+        expr9 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/h4').text
+        print(expr9)
+        self.assertEqual(expr9, "Category: vechiles")
+        time.sleep(1)
+
+    def test_schoolbutton(self):
+         # checking to see if school botton works 
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div/div[1]/li[5]/button/div/h5').click()
+        expr10 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/h4').text
+        print(expr10)
+        self.assertEqual(expr10, "Category: school")
+        time.sleep(1)
+  
+     def test_entertaintmentbutton(self):
+         # checking to see if entertainment botton works 
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div/div[2]/li[1]/button/div/h5').click()
+        expr11 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/h4').text
+        print(expr11)
+        self.assertEqual(expr11, "Category: entertainment")
+        time.sleep(1)
+
+    def test_gardenbutton(self):
+         # checking to see if garden botton works 
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div/div[2]/li[2]/button/div/h5').click()
+        expr12 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/h4').text
+        print(expr12)
+        self.assertEqual(expr12, "Category: garden")
+        time.sleep(1)
+
+    def test_petbutton(self):
+         # checking to see if pet botton works 
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div/div[2]/li[3]/button/div/h5').click()
+        expr13 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/h4').text
+        print(expr13)
+        self.assertEqual(expr13, "Category: pet")
+        time.sleep(1)
+
+    def test_sportbutton(self):
+         # checking to see if pet botton works 
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div/div[2]/li[4]/button/div/h5').click()
+        expr14 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/h4').text
+        print(expr14)
+        self.assertEqual(expr14, "Category: sport")
+        time.sleep(1)
+
+     def test_sportbutton(self):
+         # checking to see if homes botton works 
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div/div[2]/li[5]/button/div/h5').click()
+        expr15 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/h4').text
+        print(expr15)
+        self.assertEqual(expr15, "Category: homes")
+        time.sleep(1)
+
+    def test_signupbutton(self):
+         # checking to see if signup botton works 
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/footer/div/div/div[3]/a/button').click()
+        expr16 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/form/h3').text
+        print(expr16)
+        self.assertEqual(expr16, "Category: Sign Up")
+        time.sleep(1)
+
+   def test_homebutton(self):
+         # checking to see if home botton works 
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/nav/div[2]/a[2]]').click()
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/nav/div[1]/a[1]').click()
+        expr17 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div[2]/div/div/h1').text
+        print(expr17)
+        self.assertEqual(expr17, "PRODUCTS")
+        time.sleep(1)
+    
+    
+
+
+        
 
 
     
