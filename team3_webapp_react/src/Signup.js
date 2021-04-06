@@ -16,6 +16,11 @@ function Signup() {
 
   const onSubmitClick = (e) => {
     e.preventDefault()
+
+    if (!username || !password || !email) {
+        return alert('fill all the fields first!')
+    }
+
     console.log("You pressed submit")
     let opts = {
       'email' : email,
