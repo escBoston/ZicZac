@@ -43,9 +43,22 @@ class signuppagefunctionality(unittest.TestCase):
         self.driver.find_element_by_xpath('//*[@id="root"]/div/div/form/button').click()
         exps1 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/form/span').text
         print(exps1)
-        self.assertEqual(exps1, "Password requirements not met!")
+        self.assertEqual(exps1, "password requirements not met!")
         time.sleep(1)
 
+    def test_existinguser(self):
+
+        #checking to see if the error message displayed when user enters existing user info
+        email.send_keys("testingproject@gmail.com")
+        username = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/form/div[2]/input')
+        username.send_keys("securitytest")
+        password=self.driver.find_element_by_xpath('//*[@id="root"]/div/div/form/div[3]/input')
+        password.send_keys("Securitytest1!")
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div/form/button').click()
+        exps2 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/form/span').text
+        print(exps2)
+        self.assertEqual(exps2, "username taken")
+        time.sleep(1)
 
  def teardown(self):
         self.driver.close()
