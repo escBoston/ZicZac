@@ -10,13 +10,13 @@ import Footer from './Footer'
 import { Button, Icon, Label } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 
-
 function ProductDetails(props) {
+
     const history = useHistory();
     const location = useLocation();
     const title = props.location.title
     const [item, setItem] = useState();
-    var price, description, seller, img, state = ''
+    var price, description, img, state, seller = ''
 
     let opts = {
       'title': title
@@ -32,7 +32,6 @@ function ProductDetails(props) {
     })
     }, []);
 
-    console.log(item)
     if (typeof item != 'undefined') {
       price = parseFloat(item.price).toFixed(2)
       description = item.description
@@ -40,6 +39,7 @@ function ProductDetails(props) {
       img = item.photo
       state = item.state
     }
+
 
     return (
       <div>
@@ -89,7 +89,13 @@ function ProductDetails(props) {
 </Col>
 
   <Col xs={2}>
-{seller} <UserProfile width={80} height={80} size={12}/>
+  <Link to={{
+    pathname: "./SendMessage",
+    seller: seller,
+    buyer: localStorage.getItem('user'),
+    title: title
+  }}>{seller}<UserProfile width={80} height={80} size={12} username={seller}/></Link>
+
 </Col>
 </Row>
       </Col>

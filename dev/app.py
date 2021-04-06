@@ -98,8 +98,6 @@ class Login(MethodResource, Resource):
 api.add_resource(Login, '/api/login')
 docs.register(Login)
 
-
-
 class Signup(MethodResource, Resource):
     def post(self):
         req = flask.request.get_json(force=True)
@@ -125,6 +123,8 @@ class Signup(MethodResource, Resource):
                     return {'message' : 'username taken'}, 200
                 else:
                     cur.execute("INSERT INTO accounts (username, email, salt, password_enc) VALUES (?,?,?,?)",(username, email, salt, password_enc))
+                    cur.execute(f"CREATE TABLE db0.{username}_inbox (message_id INTEGER PRIMARY KEY, sender STRING, body TEXT, date DATETIME)")
+                    cur.execute(f"CREATE TABLE db0.{username}_outbox (message_id INTEGER PRIMARY KEY, recipient STRING, body TEXT, date DATETIME)")
                     con.commit()
                     return {'message' : 'success'}, 200
 
@@ -227,6 +227,21 @@ def post_product():
         with sqlite3.connect(database) as con:
             cur = con.cursor()
             cur.execute(f"insert into inventory (title, price, description, category, date_added, photo_filepath, seller, state, photo) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", (title, price, description, category, date_added, photo_filepath, seller, state, image))
+            con.commit()
+            return {'message' : 'success'}, 200
+
+@app.route('/api/send_message', methods=['POST'])
+def send_message():
+    req = flask.request.get_json(force=True)
+    seller = req.get('seller')
+    buyer = req.get('buyer')
+    message = req.get('message')
+    date = arrow.now().format('YYYY-MM-DD')
+    with app.app_context():
+        with sqlite3.connect(database) as con:
+            cur = con.cursor()
+            cur.execute(f"INSERT INTO {seller}_inbox (sender, body, date) VALUES (?, ?, ?)", (buyer, message, date))
+            cur.execute(f"INSERT INTO {buyer}_outbox (recipient, body, date) VALUES (?, ?, ?)", (seller, message, date))
             con.commit()
             return {'message' : 'success'}, 200
 

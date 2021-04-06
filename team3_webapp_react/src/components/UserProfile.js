@@ -8,7 +8,7 @@ class UserProfile extends React.Component {
         super(props);
         this.state={
             user_id:this.props.user_id,
-            username:"test_user",//this.props.username,
+            username:this.props.username,
             email:this.props.email,
             profileImage:this.props.profileImage,
             msg:this.props.msg,

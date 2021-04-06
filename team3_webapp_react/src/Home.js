@@ -9,6 +9,7 @@ import Section3 from './components/Section3';
 import Section4 from './components/Section4';
 import ProductDetails from './components/ProductDetail'
 import UploadProduct from './components/UploadProduct'
+import SendMessage from './components/SendMessage'
 import Account from './Account';
 import Products from './Products';
 import Deals from './Deals';
@@ -33,6 +34,7 @@ function Home(props) {
     <Route path="/ProductDetails" component={ProductDetails} />
     <Route path="/Account" component={Account} />
     <Route path="/Sell" component={Sell} />
+    <Route path="/SendMessage" component={SendMessage} />
     </Switch>
 </BrowserRouter>
     </div>
