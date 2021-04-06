@@ -60,6 +60,11 @@ class signuppagefunctionality(unittest.TestCase):
         self.assertEqual(exps2, "username taken")
         time.sleep(1)
 
+    def test_blankfields(self):
+        #Checking the error message when user does not enter empty fields.
+        email= self.driver.find_element_by_xpath('//*[@id="root"]/div/div/form/button')
+
+
  def teardown(self):
         self.driver.close()
 
