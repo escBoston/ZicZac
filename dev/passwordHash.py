@@ -55,6 +55,5 @@ class passwordHash:
 
 if __name__ == "__main__":
     password_signup = input("Enter your password for sign up: ")
-    password_login = input("Enter your password for login in: ")
-    passwordHash().test(password_signup, password_login)
-
+    password_loginin = input("Enter your password for login in: ")
+    passwordHash().test(password_signup, password_loginin)

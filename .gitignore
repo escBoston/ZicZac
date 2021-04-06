@@ -129,4 +129,7 @@ node_modules/
 package-lock.json
 team3_webapp_react/package-lock.json
 team3_webapp_react/node_modules/
+
+# dev
 dev/static/
+dev/.DS_Store

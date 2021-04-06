@@ -7,17 +7,16 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Header from './Header'
 import Footer from './Footer'
-import UserProfile_small from "./UserProfile_small";
 import { Button, Icon, Label } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 
-
 function ProductDetails(props) {
+
     const history = useHistory();
     const location = useLocation();
     const title = props.location.title
     const [item, setItem] = useState();
-    var price, description, seller, img = ''
+    var price, description, img, state, seller = ''
 
     let opts = {
       'title': title
@@ -33,13 +32,14 @@ function ProductDetails(props) {
     })
     }, []);
 
-    console.log(item)
     if (typeof item != 'undefined') {
       price = parseFloat(item.price).toFixed(2)
       description = item.description
       seller = item.seller
-      img = item.photo_filepath
+      img = item.photo
+      state = item.state
     }
+
 
     return (
       <div>
@@ -58,6 +58,8 @@ function ProductDetails(props) {
       <Col xs={6}>
       <h3>Description</h3><br/>
       <p>{description}</p>
+      <h3>State</h3><br/>
+      <p>{state}</p>
       <Button as='div' labelPosition='right'>
 <Button
   color='red'
@@ -87,7 +89,13 @@ function ProductDetails(props) {
 </Col>
 
   <Col xs={2}>
-{seller} <UserProfile_small />
+  <Link to={{
+    pathname: "./SendMessage",
+    seller: seller,
+    buyer: localStorage.getItem('user'),
+    title: title
+  }}>{seller}<UserProfile width={80} height={80} size={12} username={seller}/></Link>
+
 </Col>
 </Row>
       </Col>

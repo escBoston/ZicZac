@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Header from './components/Header'
 import Footer from './components/Footer'
 
-function Account() {
+function Account(props) {
+  console.log(props.user)
   return (
     <div>
     <Header />
