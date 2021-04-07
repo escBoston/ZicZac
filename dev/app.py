@@ -123,8 +123,8 @@ class Signup(MethodResource, Resource):
                     return {'message' : 'username taken'}, 200
                 else:
                     cur.execute("INSERT INTO accounts (username, email, salt, password_enc) VALUES (?,?,?,?)",(username, email, salt, password_enc))
-                    cur.execute(f"CREATE TABLE db0.{username}_inbox (message_id INTEGER PRIMARY KEY, sender STRING, body TEXT, date DATETIME)")
-                    cur.execute(f"CREATE TABLE db0.{username}_outbox (message_id INTEGER PRIMARY KEY, recipient STRING, body TEXT, date DATETIME)")
+                    cur.execute(f"CREATE TABLE {username}_inbox (message_id INTEGER PRIMARY KEY, sender STRING, body TEXT, date DATETIME)")
+                    cur.execute(f"CREATE TABLE {username}_outbox (message_id INTEGER PRIMARY KEY, recipient STRING, body TEXT, date DATETIME)")
                     con.commit()
                     return {'message' : 'success'}, 200
 
