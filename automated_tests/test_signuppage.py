@@ -5,6 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+import random 
 import time
 
 
@@ -27,7 +28,7 @@ class signuppagefunctionality(unittest.TestCase):
         email.send_keys("testingproject@gmail.com")
         username = self.driver.find_element_by_xpath(
             '//*[@id="root"]/div/div/form/div[2]/input')
-        username.send_keys("Jacob15")
+        username.send_keys(''.join(random.choice('0123456789ABCDEF') for i in range(16)))
         password = self.driver.find_element_by_xpath(
             '//*[@id="root"]/div/div/form/div[3]/input')
         password.send_keys("Beauty1234@")
@@ -46,7 +47,7 @@ class signuppagefunctionality(unittest.TestCase):
         email.send_keys("testingproject@gmail.com")
         username = self.driver.find_element_by_xpath(
             '//*[@id="root"]/div/div/form/div[2]/input')
-        username.send_keys("Jacob15")
+        username.send_keys(''.join(random.choice('0123456789ABCDEF') for i in range(16)))
         password = self.driver.find_element_by_xpath(
             '//*[@id="root"]/div/div/form/div[3]/input')
         password.send_keys("abcd")

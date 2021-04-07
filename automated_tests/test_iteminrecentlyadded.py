@@ -55,10 +55,6 @@ class iteminrecentlyadded(unittest.TestCase):
         time.sleep(3)
 
         recentlyadded = self.driver.find_element_by_id("sort")
-        recentlyadded.send_keys("Price")
-        self.driver.find_element_by_xpath(
-            '//*[@id="root"]/div/div/div[2]/div/form/div/button').click()
-        recentlyadded = self.driver.find_element_by_id("sort")
         recentlyadded.send_keys("Recently Added")
         self.driver.find_element_by_xpath(
             '//*[@id="root"]/div/div/div[2]/div/form/div/button').click()
@@ -70,7 +66,7 @@ class iteminrecentlyadded(unittest.TestCase):
         for card in cards:
             items.append(card.find_element_by_class_name("cards__item__text"))
         print(items)
-
+        print(titlename)
         self.assertTrue(titlename in items)
 
     def teardown(self):

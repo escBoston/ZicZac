@@ -40,8 +40,7 @@ class homepagetest(unittest.TestCase):
         price = []
         for card in cards:
 
-            price.append(card.find_element_by_tag_name(
-                "figure").get_attribute('data-category'))
+            price.append(card.find_element_by_tag_name("figure").get_attribute('data-category'))
         priceCopy = price
         priceCopy.sort()
         print(price)
@@ -164,7 +163,7 @@ class homepagetest(unittest.TestCase):
         self.assertEqual(expr14, "Category: sport")
         time.sleep(1)
 
-    def test_sportbutton(self):
+    def test_homesbutton(self):
          # checking to see if homes botton works
         self.driver.find_element_by_xpath(
             '//*[@id="root"]/div/div/div[1]/div/div[2]/li[5]/button/div/h5').click()
