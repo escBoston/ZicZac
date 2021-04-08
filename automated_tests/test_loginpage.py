@@ -40,10 +40,10 @@ class loginpagefunctionality(unittest.TestCase):
         time.sleep(3)
         expr4 = self.driver.find_element_by_xpath('//*[@id="root"]/div/div/div/div/span').text
         print(expr4)
-        self.assertEqual(expr4, "Incorrect password.")
+        self.assertEqual(expr4, "Incorrect password")
         time.sleep(1)
 
-      def test_loginpagefunction(self):
+    def test_loginpagefunction(self):
     #checking to see if a user can login with existing account
 
         username = self.driver.find_element_by_xpath( '//*[@id="root"]/div/div/div/div/div[1]/input')
