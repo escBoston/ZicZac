@@ -14,7 +14,8 @@ import Signin from './Signin';
 import Signup from './Signup';
 import ProductDetails from "./components/ProductDetail";
 import UploadProduct from "./Sell";
-import ContactUs from './ContactUs'
+import Search from './components/Search';
+import SendMessage from './components/SendMessage'
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
 <BrowserRouter>
     <Switch>
     <Route exact path="/">
-    <Redirect to="/Home" /></Route>
+    <Redirect to="/Home" component={Home}/></Route>
     <Route path="/Home" component={Home} />
     <Route path="/Deals" component={Deals} />
     <Route path="/Products" component={Products} />
@@ -32,8 +33,8 @@ function App() {
     <Route path="/Signup" component={Signup} />
     <Route path="/ProductDetails" component={ProductDetails} />
     <Route path="/Sell" component={UploadProduct} />
-    <Route path="/ContactUs" component={ContactUs}/>
-
+    <Route path="/Search" component={Search} />
+    <Route path="/SendMessage" component={SendMessage} />
     </Switch>
 </BrowserRouter>
     </div>
