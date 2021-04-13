@@ -37,12 +37,16 @@ function SendMessage (props) {
   return (
     <div>
     <Header />
+    <div style={{paddingLeft:"100px", width: '400px', height: "400px"}}>
+    <br/>
     <p>Ask {seller} about the {title}!</p>
     <Form.Control as="textarea" rows={5}
         onChange={onMessageChange}
         value={message}
     />
+    <br/>
     <Button onClick={onSend}>SEND</Button>
+    </div>
     <Footer />
     </div>
 

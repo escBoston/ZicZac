@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Form, Nav, Navbar, NavDropdown, MenuItem,  Tabs, ButtonToolbar, Button, Table, ButtonGroup, Row, Col, Grid, Panel, FormGroup, FormControl} from 'react-bootstrap';
+import {Form, Nav, Dropdown, Navbar, NavDropdown, MenuItem,  Tabs, ButtonToolbar, Button, Table, ButtonGroup, Row, Col, Grid, Panel, FormGroup, FormControl} from 'react-bootstrap';
 import styled from 'styled-components';
 import logo from './zigzag_logo.png';
 import {
@@ -23,7 +23,7 @@ const Header = (props) => {
   }
 
   return(
-    <Navbar>
+    <Navbar style={{paddingLeft: "90px", paddingRight: "150px"}}>
     <Navbar.Brand href="#home"><img className="logo" src={logo} alt="Logo" /></Navbar.Brand>
     <Nav className="mr-auto">
       <Nav.Link className="header_link" href="../Home">Home</Nav.Link>
@@ -34,8 +34,18 @@ const Header = (props) => {
       <Button variant="outline-danger" onClick={() => search(query)}>Search</Button>
     </Form>
     <Nav className="ml-auto">
-      <Nav.Link className="header_link" href="../Deals">Deals</Nav.Link>
-      <Nav.Link className="header_link" href="../Account">Account</Nav.Link>
+    <Dropdown>
+  <Dropdown.Toggle style={{  background: "transparent", border: "none", color: "black"}}>
+    My Account
+  </Dropdown.Toggle>
+
+  <Dropdown.Menu className="my-dropdown">
+    <Dropdown.Item href="../Signin">Login</Dropdown.Item>
+    <Dropdown.Item href="../Signup">Signup</Dropdown.Item>
+    <Dropdown.Item href="../Sell">Sell my product</Dropdown.Item>
+    <Dropdown.Item href="../Messages">My messages</Dropdown.Item>
+  </Dropdown.Menu>
+</Dropdown>
     </Nav>
   </Navbar>
   )

@@ -16,6 +16,7 @@ import ProductDetails from "./components/ProductDetail";
 import UploadProduct from "./Sell";
 import Search from './components/Search';
 import SendMessage from './components/SendMessage'
+import Messages from './components/Messages'
 
 function App() {
   return (
@@ -26,15 +27,14 @@ function App() {
     <Route exact path="/">
     <Redirect to="/Home" component={Home}/></Route>
     <Route path="/Home" component={Home} />
-    <Route path="/Deals" component={Deals} />
     <Route path="/Products" component={Products} />
-    <Route path="/Account" component={Account} />
     <Route path="/Signin" component={Signin} />
     <Route path="/Signup" component={Signup} />
     <Route path="/ProductDetails" component={ProductDetails} />
     <Route path="/Sell" component={UploadProduct} />
     <Route path="/Search" component={Search} />
     <Route path="/SendMessage" component={SendMessage} />
+    <Route path="/Messages" component={Messages} />
     </Switch>
 </BrowserRouter>
     </div>

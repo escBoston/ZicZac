@@ -123,8 +123,8 @@ class Signup(MethodResource, Resource):
                     return {'message' : 'username taken'}, 200
                 else:
                     cur.execute("INSERT INTO accounts (username, email, salt, password_enc) VALUES (?,?,?,?)",(username, email, salt, password_enc))
-                    cur.execute(f"CREATE TABLE db0.{username}_inbox (message_id INTEGER PRIMARY KEY, sender STRING, body TEXT, date DATETIME)")
-                    cur.execute(f"CREATE TABLE db0.{username}_outbox (message_id INTEGER PRIMARY KEY, recipient STRING, body TEXT, date DATETIME)")
+                    cur.execute(f"CREATE TABLE {username}_inbox (message_id INTEGER PRIMARY KEY, sender STRING, body TEXT, date DATETIME)")
+                    cur.execute(f"CREATE TABLE {username}_outbox (message_id INTEGER PRIMARY KEY, recipient STRING, body TEXT, date DATETIME)")
                     con.commit()
                     return {'message' : 'success'}, 200
 
@@ -236,33 +236,41 @@ def send_message():
     seller = req.get('seller')
     buyer = req.get('buyer')
     message = req.get('message')
-    date = arrow.now().format('YYYY-MM-DD')
+    date = arrow.now().format('YYYY-MM-DD HH:MM')
     with app.app_context():
         with sqlite3.connect(database) as con:
             cur = con.cursor()
             cur.execute(f"INSERT INTO {seller}_inbox (sender, body, date) VALUES (?, ?, ?)", (buyer, message, date))
-            cur.execute(f"INSERT INTO {buyer}_outbox (recipient, body, date) VALUES (?, ?, ?)", (seller, message, date))
+            cur.execute(f"INSERT INTO {buyer}_outbox ([to], body, date) VALUES (?, ?, ?)", (seller, message, date))
             con.commit()
             return {'message' : 'success'}, 200
 
-# @app.route('/api/get_imgs', methods=['POST'])
-# def get_imgs():
-#     req = flask.request.get_json(force=True)
-#     titles = req.get('titles')
-#     imgs = []
-#     with app.app_context():
-#         with sqlite3.connect(database) as con:
-#             cur = con.cursor()
-#             cur.execute(f"select photo_filepath from inventory where title in ('{titles[0]}')")
-#             imgs.append(cur.fetchall())
-#             cur.execute(f"select photo_filepath from inventory where title in ('{titles[1]}')")
-#             imgs.append(cur.fetchall())
-#             cur.execute(f"select photo_filepath from inventory where title in ('{titles[2]}')")
-#             imgs.append(cur.fetchall())
-#             cur.execute(f"select photo_filepath from inventory where title in ('{titles[3]}')")
-#             imgs.append(cur.fetchall())
-#             imgs = [img[0] for img in imgs]
-#             return {'imgs' : imgs}, 200
+@app.route('/api/get_inbox', methods=['POST'])
+def get_inbox():
+    req =  flask.request.get_json(force=True)
+    user = req.get('user')
+    with app.app_context():
+        with sqlite3.connect(database) as con:
+            cur = con.cursor()
+            cur.execute(f"SELECT * FROM {user}_inbox")
+            inbox = cur.fetchall()
+            cur.execute(f"SELECT * FROM {user}_outbox")
+            outbox = cur.fetchall()
+            return {'inbox' : inbox, 'outbox' : outbox}, 200
+
+@app.route('/api/get_messages', methods=['POST'])
+def get_messages():
+    req = flask.request.get_json(force=True)
+    user = req.get('user')
+    contact = req.get('contact')
+    with app.app_context():
+        with sqlite3.connect(database) as con:
+            cur = con.cursor()
+            cur.execute(f"SELECT * FROM {user}_inbox WHERE sender LIKE '%{contact}%'")
+            convoIn = cur.fetchall()
+            cur.execute(f"SELECT * FROM {user}_outbox WHERE [to] LIKE '%{contact}%'")
+            convoOut = cur.fetchall()
+            return {'convoIn' : convoIn, 'convoOut' : convoOut}, 200
 
 # @app.route('/api/refresh', methods=['POST'])
 # def refresh():
