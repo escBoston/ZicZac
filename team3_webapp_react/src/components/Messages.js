@@ -113,6 +113,7 @@ function Messages (props) {
   return (
     <div>
     <Header />
+    <div style={{paddingLeft:"100px"}}>
     <Row>
     <Col>
     <div>
@@ -137,9 +138,12 @@ function Messages (props) {
         </div>
         : <p>Select a name to see your message history!</p>
     }
+
+
     </div>
     </Col>
     </Row>
+    </div>
     <Footer />
     </div>
   );

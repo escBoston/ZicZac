@@ -23,14 +23,10 @@ function Home(props) {
 
     <Section1 />
     <Section2 />
-    <Section3 />
-    <Section4 />
     <Footer />
 
 <BrowserRouter>
     <Switch>
-    <Route path="/Account" component={Account} />
-    <Route path="/Deals" component={Deals} />
     <Route path="/Products" component={Products} />
     <Route path="/ProductDetails" component={ProductDetails} />
     <Route path="/Account" component={Account} />

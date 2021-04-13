@@ -17,6 +17,7 @@ function ProductDetails(props) {
     const title = props.location.title
     const [item, setItem] = useState();
     var price, description, img, state, seller = ''
+    const like = 0;
 
     let opts = {
       'title': title
@@ -62,25 +63,27 @@ function ProductDetails(props) {
       <p>{state}</p>
       <Button as='div' labelPosition='right'>
 <Button
-  color='red'
-  content='Like'
-  icon='heart'
-  label={{ basic: true, color: 'red', pointing: 'left', content: '2,048' }}
-/>
-
-<Button basic color='red'
-  content='Chat'
-  icon='wechat'
-/>
-
-<Button
-  color='red'
-  content='Add to Cart'
-  icon='cart plus'
+color='red'
+content='Like'
+icon='heart'
+label={{ basic: true, color: 'red', pointing: 'left', content: like}}
 />
 
 
-      </Button>
+
+<Link to={{
+  pathname: "./SendMessage",
+  seller: seller,
+  buyer: localStorage.getItem('user'),
+  title: title
+}}>
+<Button style={{marginLeft: "10px"}} basic color='red'
+content="Chat with"
+label={{ basic: true, color: 'red', pointing: 'left', content: seller}}
+icon='wechat'
+/>  </Link>
+  </Button>
+
       <Row>
 <Col xs={3}>
 </Col>
@@ -89,12 +92,7 @@ function ProductDetails(props) {
 </Col>
 
   <Col xs={2}>
-  <Link to={{
-    pathname: "./SendMessage",
-    seller: seller,
-    buyer: localStorage.getItem('user'),
-    title: title
-  }}>{seller}<UserProfile width={80} height={80} size={12} username={seller}/></Link>
+  <UserProfile width={80} height={80} size={12} username={seller}/>
 
 </Col>
 </Row>
