@@ -28,7 +28,6 @@ function Cards(props) {
 
   return (
     <div className='cards'>
-      <h1>PRODUCTS</h1>
       <Row>
             <CardItem
               src={imgs[0]}

@@ -57,7 +57,7 @@ function Signin(props) {
   return (
     <div className="App">
     <Header />
-    <div className="container p-3 my-3 border">
+    <div className="container p-3 my-3 border" style={{width: '400px', height: "400px"}}>
         <h3>Sign In</h3>
 
         {!logged? <div>

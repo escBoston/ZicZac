@@ -4,7 +4,6 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 
 function Account(props) {
-  console.log(props.user)
   return (
     <div>
     <Header />
@@ -17,6 +16,9 @@ function Account(props) {
                   </li>
                   <li className="nav-item">
                     <Link className="nav-link" to={"/Sell"}>Sell my product</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link classname="nav-link" to={"/Messages"}>My messages</Link>
                   </li>
                 </ul></div>
     <Footer />

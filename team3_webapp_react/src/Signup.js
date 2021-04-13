@@ -58,6 +58,7 @@ function Signup() {
   return (
     <div>
     <Header />
+        <div className="container p-3 my-3 border" style={{width: '400px', height: "400px"}}>
             <form>
                 <h3>Sign Up</h3>
 
@@ -86,6 +87,7 @@ function Signup() {
                     Already registered <a href="./Signin">sign in?</a>
                 </p>
             </form>
+            </div>
             <Footer />
             </div>
 
