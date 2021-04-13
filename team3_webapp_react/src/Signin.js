@@ -87,7 +87,9 @@ function Signin(props) {
         <button onClick={onSubmitClick} type="submit" className="btn btn-primary btn-block">
           Submit
         </button>
-        {failmsg}
+        <span>
+          {failmsg}
+          </span>
 
       {/*TODO: implement function for this */}
         <p className="forgot-password text-center">

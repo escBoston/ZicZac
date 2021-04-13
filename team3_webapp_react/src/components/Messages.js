@@ -139,6 +139,7 @@ function Messages (props) {
         : <p>Select a name to see your message history!</p>
     }
 
+
     </div>
     </Col>
     </Row>

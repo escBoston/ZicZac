@@ -22,9 +22,12 @@ const Footerpage = () => {
         <div className="container">
           <div className="row">
             <div className="col-sm-2 col-md-3 item">
+              <Link to="../Home">
               <img src={logo} width="100" height="100" />
+              </Link>
               <br />
               <br />
+              <Link to="../ContactUs">
               <button
                 className="button"
                 style={{
@@ -38,6 +41,8 @@ const Footerpage = () => {
               >
                 Contact Us!
               </button>
+              </Link>
+
             </div>
             <div className="col-sm-2 col-md-3 item">
               <div
@@ -78,8 +83,10 @@ const Footerpage = () => {
 
               </button>
               </Link>
+
               <br />
               <br />
+
               <small
                 style={{
                   position: "static"
@@ -99,16 +106,16 @@ const Footerpage = () => {
                   >
                     :
                   </span>
-                  <a
-                    href="#"
+                  <span
                     style={{
                       color: "orange"
                     }}
                   >
-                    ziczac.com
-                  </a>
+                    &nbsp;ziczac
+                  </span>
                 </div>
               </small>
+
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@ import uuid
 import random
 from passlib.hash import pbkdf2_sha512
 
+
 # The passlib package should be installed before running
 
 class passwordHash:
@@ -45,6 +46,9 @@ class passwordHash:
         raw_list = passwordHash().encrypt(password_signup)
         salt = raw_list[0]
         password_encrypted = raw_list[1]
+        temp_password = password_encrypted.split("[(rd)]")
+        hash_round = int(temp_password[1])
+        print("Hash round: " + str(hash_round))
         print("Salt: " + salt)
         print("Encrypted password: " + password_encrypted)
         print("Checking password: " + str(passwordHash().check_password(password_loginin, salt, password_encrypted)))
