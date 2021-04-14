@@ -9,8 +9,9 @@ const Section2 = () => {
   const [logged] = useAuth();
   const [inventory, setInventory] = useState([]);
 
+
+
   const onSubmitClick = (e)=>{
-    e.preventDefault()
     console.log("submitted")
     let opts = {
       'sort': sort
@@ -31,26 +32,38 @@ const Section2 = () => {
     setSort(e.target.value)
   }
 
+  useEffect(() => {
+    setSort("recent")
+  },[setSort]);
+
+  useEffect(() => {
+    onSubmitClick()
+  });
+
+
+
   return(
 
     <div className="section2">
 
-    <div>
-      <h4>Products</h4>
+    <div style={{paddingLeft: "90px", paddingRight: "150px"}}>
+    <br/>
+    <br/>
+      <h4>Featured Products</h4>
       <form className="form" action="/" method="get">
       <div className="dropdown">
       {/*TODO: add for="sort" back? */}
-      <label>Sort Products:</label>
-        <select name="sort" id="sort" onChange={handleSortChange} value={sort}>
-          <option value="recent">Recently Added</option>
-          <option value="price">Price</option>
+      <label style={{paddingRight: "10px"}}>Sort Products by</label>
+        <select style={{border: '1px solid gray', boxShadow: "none"}} name="sort" id="sort" onChange={handleSortChange} value={sort}>
+          <option  value="recent">Recently Added</option>
+          <option  value="price">Price</option>
         </select>
-      <button className="button" onClick={onSubmitClick} type="submit">Submit</button>
       </div>
+      <br/>
       </form>
       {<Cards prodsrc={inventory}/>}
     </div>
-    
+
     </div>
   )
 }
