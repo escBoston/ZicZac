@@ -9,9 +9,22 @@ contact.use(cors());
 contact.use(express.json());
 contact.use('/', router);
 contact.listen(5000, () => console.log("Server Running"));
+/*
+var transport = {
+    service: 'gmail', // Don’t forget to replace with the SMTP host of your provider
+    secure: false,
+    port: 25,
+    auth: {
+      user: creds.USER,
+      pass: creds.PASS
+    }, tls:{
+      rejectUnauthorized:false
+    }
+}
+*/
 
 const transport = {
-  host: "smtp.gmail.com",
+  host: "smtp-mail.outlook.com",
   port : 587,
   auth: {
     user: creds.USER,
