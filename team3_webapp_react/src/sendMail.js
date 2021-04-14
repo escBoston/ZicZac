@@ -9,19 +9,7 @@ contact.use(cors());
 contact.use(express.json());
 contact.use('/', router);
 contact.listen(5000, () => console.log("Server Running"));
-/*
-var transport = {
-    service: 'gmail', // Don’t forget to replace with the SMTP host of your provider
-    secure: false,
-    port: 25,
-    auth: {
-      user: creds.USER,
-      pass: creds.PASS
-    }, tls:{
-      rejectUnauthorized:false
-    }
-}
-*/
+
 
 const transport = {
   host: "smtp-mail.outlook.com",
@@ -33,10 +21,6 @@ const transport = {
 }
 
 var transporter = nodemailer.createTransport(transport)
-
-
-
-//var transporter = nodemailer.createTransport(transport)
 
 transporter.verify((error) => {
   if (error) {
@@ -53,7 +37,7 @@ router.post('/contact', (req, res, next) => {
 
   var mail = {
     sender: email,
-    to: creds.USER,  // Change to email address that you want to receive messages on
+    to: creds.USER,
     subject: 'Feedback from the User',
     text: content
   }
