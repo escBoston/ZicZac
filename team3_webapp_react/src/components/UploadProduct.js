@@ -88,12 +88,17 @@ function UploadProductPage(props) {
     const [msg, setMsg] = useState('')
 
     const handleDrop = acceptedFiles => {
-      setFileNames(acceptedFiles.map(file => file.name));
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        setImage(reader.result)
-      };
-      reader.readAsDataURL(acceptedFiles[0]);
+      if (acceptedFiles[0].size > 5242880) { // 5MB
+        alert("Error: Maximum file size exceeded!")
+      }
+      else {
+        setFileNames(acceptedFiles.map(file => file.name));
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          setImage(reader.result)
+        };
+        reader.readAsDataURL(acceptedFiles[0]);
+      }
     }
 
     const onTitleChange = (event) => {
