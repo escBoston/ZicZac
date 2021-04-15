@@ -8,7 +8,6 @@ import Section2 from './components/Section2';
 import Section3 from './components/Section3';
 import Account from './Account';
 import Products from './Products';
-import Deals from './Deals';
 import Home from './Home';
 import Signin from './Signin';
 import Signup from './Signup';

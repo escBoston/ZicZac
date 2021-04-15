@@ -13,7 +13,6 @@ import SendMessage from './components/SendMessage'
 import Messages from './components/Messages'
 import Account from './Account';
 import Products from './Products';
-import Deals from './Deals';
 import Sell from './Sell';
 
 function Home(props) {

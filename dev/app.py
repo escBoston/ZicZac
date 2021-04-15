@@ -7,7 +7,6 @@ import flask_cors
 import sqlite3
 from flask import g
 
-from project_classes import *
 from passwordManager import *
 from passwordHash import *
 
