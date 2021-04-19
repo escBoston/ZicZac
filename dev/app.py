@@ -33,21 +33,6 @@ cors.init_app(app)
 
 database = './data/db.db'
 
-# def get_db():
-#     db = getattr(g, '_database', None)
-#     if db is None:
-#         db = g._database = sqlite3.connect(database)
-#     return db
-#
-# def _load_user_info_2():
-#     with app.app_context():
-#         cur = get_db().cursor()
-#         cur.execute("select * from accounts")
-#         accounts = cur.fetchall()
-#         cur.execute("select * from inventory")
-#         inventory = cur.fetchall()
-#         return accounts, inventory
-
 #setting up swagger api
 api = Api(app)
 app.config.update({
@@ -67,32 +52,84 @@ class RequestSchema(Schema):
     api_type = fields.String(required=True, description="test")
 
 
-
 # Set up some routes for the example
 @app.route('/api/')
 def home():
     return {"Hello": "World"}, 200
 
+def query_db(queries, method, params):
+    with app.app_context():
+        with sqlite3.connect(database) as con:
+            cur = con.cursor()
+            if (method == 'login'):
+                cur.execute(queries[0])
+                accounts = cur.fetchall()
+                for a in accounts:
+                    if a[0] == params['username']:
+                        message = 'Login accepted.' if params['ph'].check_password(params['password'], a[2], a[3]) else 'Incorrect password'
+                        return {'message': message}, 200
+                return {'message': 'Invalid username.'}, 200
+            elif (method == 'signup'):
+                cur.execute(queries[0])
+                accounts = cur.fetchall()
+                usernames = []
+                [usernames.append(a[0]) for a in accounts]
+                if params['username'] in usernames:
+                    return {'message' : 'username taken'}, 200
+                else:
+                    cur.execute(queries[1])
+                    cur.execute(queries[2])
+                    cur.execute(queries[3])
+                    con.commit()
+                    return {'message' : 'success'}, 200
+            elif (method == 'sort'):
+                if params['sort'] == 'recent':
+                    cur.execute(queries[0])
+                elif params['sort'] =='price':
+                    cur.execute(queries[1])
+                inv = cur.fetchall()
+                return {'inventory' : jsonify_inv(inv)}, 200
+            elif (method == 'select_category' or method == 'getitem' or method == 'search'):
+                cur.execute(queries[0])
+                items = cur.fetchall()
+                return {'items' : jsonify_inv(items)}, 200
+            elif (method == 'post_product'):
+                cur.execute(queries[0])
+                con.commit()
+                return {'message' : 'success'}, 200
+            elif (method == 'send_message'):
+                print(queries[1])
+                cur.execute(queries[0])
+                cur.execute(queries[1])
+                con.commit()
+                return {'message' : 'success'}, 200
+            elif (method == 'get_inbox'):
+                cur.execute(queries[0])
+                inbox = cur.fetchall()
+                cur.execute(queries[1])
+                outbox = cur.fetchall()
+                return {'inbox' : inbox, 'outbox' : outbox}, 200
+            elif (method == 'get_messages'):
+                cur.execute(queries[0])
+                convoIn = cur.fetchall()
+                cur.execute(queries[1])
+                convoOut = cur.fetchall()
+                return {'convoIn' : convoIn, 'convoOut' : convoOut}, 200
+            else:
+                return {'message' : 'success'}, 200
 
 class Login(MethodResource, Resource):
     @doc(description='login', tags=['login'])
     @marshal_with(ResponseSchema)  # marshalling
     def post(self):
         req = flask.request.get_json(force=True)
-        username = req.get('username')
-        password = req.get('password')
-        ph = passwordHash()
-
-        with app.app_context():
-            with sqlite3.connect(database) as con:
-                cur = con.cursor()
-                cur.execute("select * from accounts")
-                accounts = cur.fetchall()
-                for a in accounts:
-                    if a[0] == username:
-                        message = 'Login accepted.' if ph.check_password(password, a[2], a[3]) else 'Incorrect password'
-                        return {'message': message}, 200
-                return {'message': 'Invalid username.'}, 200
+        params = {
+            'username' : req.get('username'),
+            'password' : req.get('password'),
+            'ph' : passwordHash()
+        }
+        queries = ["select * from accounts"]
+        return query_db(queries = queries, method = "login", params = params)
 
 api.add_resource(Login, '/api/login')
 docs.register(Login)
@@ -100,36 +137,31 @@ docs.register(Login)
 class Signup(MethodResource, Resource):
     def post(self):
         req = flask.request.get_json(force=True)
-        email = req.get('email')
-        username = req.get('username')
-        password = req.get('password')
+        params = {
+            'email' : req.get('email'),
+            'username' : req.get('username'),
+            'password' : req.get('password'),
+        }
 
         pm = passwordManager()
-        if (not pm.formatChecking(password)[1]):
+        if (not pm.formatChecking(params['password'])[1]):
             return {'message' : 'password requirements not met'}, 200
 
         ph = passwordHash()
-        salt, password_enc = ph.encrypt(password)
+        salt, password_enc = ph.encrypt(params['password'])
+        params['salt'] = salt
+        params['password_enc'] = password_enc
 
-        with app.app_context():
-            with sqlite3.connect(database) as con:
-                cur = con.cursor()
-                cur.execute("select * from accounts")
-                accounts = cur.fetchall()
-                usernames = []
-                [usernames.append(a[0]) for a in accounts]
-                if username in usernames:
-                    return {'message' : 'username taken'}, 200
-                else:
-                    cur.execute("INSERT INTO accounts (username, email, salt, password_enc) VALUES (?,?,?,?)",(username, email, salt, password_enc))
-                    cur.execute(f"CREATE TABLE {username}_inbox (message_id INTEGER PRIMARY KEY, sender STRING, body TEXT, date DATETIME)")
-                    cur.execute(f"CREATE TABLE {username}_outbox (message_id INTEGER PRIMARY KEY, recipient STRING, body TEXT, date DATETIME)")
-                    con.commit()
-                    return {'message' : 'success'}, 200
+        queries = [
+            "select * from accounts",
+            f"INSERT INTO accounts (username, email, salt, password_enc) VALUES ('{params['username']}', '{params['email']}', '{params['salt']}', '{params['password_enc']}')",
+            f"CREATE TABLE {params['username']}_inbox (message_id INTEGER PRIMARY KEY, sender STRING, body TEXT, date DATETIME)",
+            f"CREATE TABLE {params['username']}_outbox (message_id INTEGER PRIMARY KEY, recipient STRING, body TEXT, date DATETIME)"
+        ]
+        return query_db(queries = queries, method = 'signup', params = params)
 
 api.add_resource(Signup, '/api/signup')
 docs.register(Signup)
-
 
 def jsonify_inv(inv):
     return [{
@@ -146,158 +178,96 @@ def jsonify_inv(inv):
 @app.route('/api/sort', methods=['POST'])
 def sort():
     req = flask.request.get_json(force=True)
-    sort = req.get('sort')
+    params = {'sort' : req.get('sort')}
+    queries = [
+        "select * from inventory order by date_added desc",
+        "select * from inventory order by price"
+    ]
 
-    with app.app_context():
-        with sqlite3.connect(database) as con:
-            cur = con.cursor()
-            if sort=='recent':
-                cur.execute("select * from inventory order by date_added desc")
-            elif sort=='price':
-                cur.execute("select * from inventory order by price")
-            inv = cur.fetchall()
-            return {'inventory' : jsonify_inv(inv)}, 200
+    return query_db(queries = queries, method = 'sort', params = params)
 
 class SelectCategory(MethodResource, Resource):
     @doc(description='getting categories', tags=['getting_categories'])
     #@marshal_with(ResponseSchema)  # marshalling
     def post(self):
         req = flask.request.get_json(force=True)
-        cat = req.get('category')
-        with app.app_context():
-            with sqlite3.connect(database) as con:
-                cur = con.cursor()
-                cur.execute(f"select * from inventory where category='{cat}'")
-                inv = cur.fetchall()
-                return {'products' : jsonify_inv(inv)}, 200
+        params = {'cat' : req.get('category')}
+        queries = [f"select * from inventory where category='{params['cat']}'"]
+        return query_db(queries = queries, method='select_category', params = params)
 
 
 api.add_resource(SelectCategory, '/api/category')
 docs.register(SelectCategory)
 
-def jsonify_item(i):
-    return {
-        'title' : i[0],
-        'price' : i[1],
-        'description' : i[2],
-        'category' : i[3],
-        'date_added' : i[4],
-        'photo_filepath' : i[5],
-        'seller' : i[6],
-        'state' : i[7],
-        'photo' : i[8]
-        }
-
 @app.route('/api/get_item', methods=['POST'])
 def get_item():
     req = flask.request.get_json(force=True)
-    title = req.get('title')
-    with app.app_context():
-        with sqlite3.connect(database) as con:
-            cur = con.cursor()
-            cur.execute(f"select * from inventory where title='{title}'")
-            item = cur.fetchall()
-            return {'item' : jsonify_inv(item)}, 200
+    params = {'title' : req.get('title')}
+    queries = [f"select * from inventory where title='{params['title']}'"]
+    return query_db(queries = queries, method = 'getitem', params = params)
 
 @app.route('/api/search', methods=['POST'])
 def search():
     req = flask.request.get_json(force=True)
-    query = req.get('query')
-    with app.app_context():
-        with sqlite3.connect(database) as con:
-            cur = con.cursor()
-            cur.execute(f"select * from inventory where title like '%{query}%' or description like '%{query}%'")
-            items = cur.fetchall()
-            return {'items' : jsonify_inv(items)}, 200
+    params = {'query' : req.get('query')}
+    queries = [f"select * from inventory where title like '%{params['query']}%' or description like '%{params['query']}%'"]
+    return query_db(queries = queries, method = 'search', params = params)
 
 @app.route('/api/post_product', methods=['POST'])
 def post_product():
     req = flask.request.get_json(force=True)
     title = req.get('title')
-    price = req.get('price')
-    description = req.get('description')
-    category = req.get('category')
-    date_added = arrow.now().format('YYYY-MM-DD')
-    photo_filepath = f"/img/{title}.jpg"
-    seller = req.get('seller')
-    state = req.get('state')
-    image = req.get('image')
-    with app.app_context():
-        with sqlite3.connect(database) as con:
-            cur = con.cursor()
-            cur.execute(f"insert into inventory (title, price, description, category, date_added, photo_filepath, seller, state, photo) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", (title, price, description, category, date_added, photo_filepath, seller, state, image))
-            con.commit()
-            return {'message' : 'success'}, 200
+    params = {
+        'title' : title,
+        'price' : req.get('price'),
+        'description' : req.get('description'),
+        'category' : req.get('category'),
+        'date_added' : arrow.now().format('YYYY-MM-DD'),
+        'photo_filepath' : f"/img/{title}.jpg",
+        'seller' : req.get('seller'),
+        'state' : req.get('state'),
+        'image' : req.get('image')
+    }
+    queries = [f"insert into inventory (title, price, description, category, date_added, photo_filepath, seller, state, photo) values ('{params['title']}', '{params['price']}', '{params['description']}', '{params['category']}', '{params['date_added']}', '{params['photo_filepath']}', '{params['seller']}', '{params['state']}', '{params['image']}')"]
+    return query_db(queries = queries, method = 'post_product', params = params)
 
 @app.route('/api/send_message', methods=['POST'])
 def send_message():
     req = flask.request.get_json(force=True)
-    seller = req.get('seller')
-    buyer = req.get('buyer')
-    message = req.get('message')
-    date = arrow.now().format('YYYY-MM-DD HH:MM')
-    with app.app_context():
-        with sqlite3.connect(database) as con:
-            cur = con.cursor()
-            cur.execute(f"INSERT INTO {seller}_inbox (sender, body, date) VALUES (?, ?, ?)", (buyer, message, date))
-            cur.execute(f"INSERT INTO {buyer}_outbox ([to], body, date) VALUES (?, ?, ?)", (seller, message, date))
-            con.commit()
-            return {'message' : 'success'}, 200
+    params = {
+        'seller' : req.get('seller'),
+        'buyer' : req.get('buyer'),
+        'message' : req.get('message'),
+        'date' : arrow.now().format('YYYY-MM-DD HH:MM:SS')
+    }
+    queries = [
+        f"INSERT INTO {params['seller']}_inbox (sender, body, date) VALUES ('{params['buyer']}', '{params['message']}', '{params['date']}')",
+        f"INSERT INTO {params['buyer']}_outbox ([to], body, date) VALUES ('{params['seller']}', '{params['message']}', '{params['date']}')"
+    ]
+    return query_db(queries = queries, method = 'send_message', params = params)
 
 @app.route('/api/get_inbox', methods=['POST'])
 def get_inbox():
     req =  flask.request.get_json(force=True)
-    user = req.get('user')
-    with app.app_context():
-        with sqlite3.connect(database) as con:
-            cur = con.cursor()
-            cur.execute(f"SELECT * FROM {user}_inbox")
-            inbox = cur.fetchall()
-            cur.execute(f"SELECT * FROM {user}_outbox")
-            outbox = cur.fetchall()
-            return {'inbox' : inbox, 'outbox' : outbox}, 200
+    params = {'user' : req.get('user')}
+    queries = [
+        f"SELECT * FROM {params['user']}_inbox",
+        f"SELECT * FROM {params['user']}_outbox"
+    ]
+    return query_db(queries = queries, method = 'get_inbox', params = params)
 
 @app.route('/api/get_messages', methods=['POST'])
 def get_messages():
     req = flask.request.get_json(force=True)
-    user = req.get('user')
-    contact = req.get('contact')
-    with app.app_context():
-        with sqlite3.connect(database) as con:
-            cur = con.cursor()
-            cur.execute(f"SELECT * FROM {user}_inbox WHERE sender LIKE '%{contact}%'")
-            convoIn = cur.fetchall()
-            cur.execute(f"SELECT * FROM {user}_outbox WHERE [to] LIKE '%{contact}%'")
-            convoOut = cur.fetchall()
-            return {'convoIn' : convoIn, 'convoOut' : convoOut}, 200
-
-# @app.route('/api/refresh', methods=['POST'])
-# def refresh():
-#     """
-#     Refreshes an existing JWT by creating a new one that is a copy of the old
-#     except that it has a refrehsed access expiration.
-#     .. example::
-#        $ curl http://localhost:5000/api/refresh -X GET \
-#          -H "Authorization: Bearer <your_token>"
-#     """
-#     print("refresh request")
-#     old_token = request.get_data()
-#     new_token = guard.refresh_jwt_token(old_token)
-#     ret = {'access_token': new_token}
-#     return ret, 200
-
-
-@app.route('/api/protected')
-# @flask_praetorian.auth_required
-def protected():
-    """
-    A protected endpoint. The auth_required decorator will require a header
-    containing a valid JWT
-    .. example::
-       $ curl http://localhost:5000/api/protected -X GET \
-         -H "Authorization: Bearer <your_token>"
-    """
-    return {'message': f'protected endpoint'}, 200#{flask_praetorian.current_user().username})'}
+    params = {
+        'user' : req.get('user'),
+        'contact' : req.get('contact')
+    }
+    queries = [
+        f"SELECT * FROM {params['user']}_inbox WHERE sender LIKE '%{params['contact']}%'",
+        f"SELECT * FROM {params['user']}_outbox WHERE [to] LIKE '%{params['contact']}%'"
+    ]
+    return query_db(queries = queries, method = 'get_messages', params = params)
 
 
 # Run the example

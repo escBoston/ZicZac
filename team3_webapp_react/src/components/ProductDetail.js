@@ -29,7 +29,7 @@ function ProductDetails(props) {
       body: JSON.stringify(opts)
     }).then(r => r.json())
     .then(token => {
-      setItem(token.item[0])
+      setItem(token.items[0])
     })
     }, []);
 
