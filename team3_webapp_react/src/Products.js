@@ -18,7 +18,7 @@ function Products(props) {
     body: JSON.stringify(opts)
   }).then(r => r.json())
   .then(token => {
-    setProducts(token.products)
+    setProducts(token.items)
   })
 }, []);
 
