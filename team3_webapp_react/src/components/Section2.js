@@ -38,7 +38,7 @@ const Section2 = () => {
 
   useEffect(() => {
     onSubmitClick()
-  });
+  }, [sort]);
 
 
 
