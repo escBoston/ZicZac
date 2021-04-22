@@ -175,16 +175,21 @@ def jsonify_inv(inv):
         'state' : i[7],
         'photo' : i[8]} for i in inv]
 
-@app.route('/api/sort', methods=['POST'])
-def sort():
-    req = flask.request.get_json(force=True)
-    params = {'sort' : req.get('sort')}
-    queries = [
-        "select * from inventory order by date_added desc",
-        "select * from inventory order by price"
-    ]
 
-    return query_db(queries = queries, method = 'sort', params = params)
+class Sort(MethodResource, Resource):
+    def post(self):
+        req = flask.request.get_json(force=True)
+        params = {'sort' : req.get('sort')}
+        queries = [
+            "select * from inventory order by date_added desc",
+            "select * from inventory order by price"
+        ]
+
+        return query_db(queries = queries, method = 'sort', params = params)
+
+api.add_resource(Sort, '/api/sort')
+docs.register(Sort)
+
 
 class SelectCategory(MethodResource, Resource):
     @doc(description='getting categories', tags=['getting_categories'])
@@ -199,76 +204,97 @@ class SelectCategory(MethodResource, Resource):
 api.add_resource(SelectCategory, '/api/category')
 docs.register(SelectCategory)
 
-@app.route('/api/get_item', methods=['POST'])
-def get_item():
-    req = flask.request.get_json(force=True)
-    params = {'title' : req.get('title')}
-    queries = [f"select * from inventory where title='{params['title']}'"]
-    return query_db(queries = queries, method = 'getitem', params = params)
 
-@app.route('/api/search', methods=['POST'])
-def search():
-    req = flask.request.get_json(force=True)
-    params = {'query' : req.get('query')}
-    queries = [f"select * from inventory where title like '%{params['query']}%' or description like '%{params['query']}%'"]
-    return query_db(queries = queries, method = 'search', params = params)
+class GetItem(MethodResource, Resource):
+    def post(self):
+        req = flask.request.get_json(force=True)
+        params = {'title' : req.get('title')}
+        queries = [f"select * from inventory where title='{params['title']}'"]
+        return query_db(queries = queries, method = 'getitem', params = params)
 
-@app.route('/api/post_product', methods=['POST'])
-def post_product():
-    req = flask.request.get_json(force=True)
-    title = req.get('title')
-    params = {
-        'title' : title,
-        'price' : req.get('price'),
-        'description' : req.get('description'),
-        'category' : req.get('category'),
-        'date_added' : arrow.now().format('YYYY-MM-DD'),
-        'photo_filepath' : f"/img/{title}.jpg",
-        'seller' : req.get('seller'),
-        'state' : req.get('state'),
-        'image' : req.get('image')
-    }
-    queries = [f"insert into inventory (title, price, description, category, date_added, photo_filepath, seller, state, photo) values ('{params['title']}', '{params['price']}', '{params['description']}', '{params['category']}', '{params['date_added']}', '{params['photo_filepath']}', '{params['seller']}', '{params['state']}', '{params['image']}')"]
-    return query_db(queries = queries, method = 'post_product', params = params)
+api.add_resource(GetItem, '/api/get_item')
+docs.register(GetItem)
 
-@app.route('/api/send_message', methods=['POST'])
-def send_message():
-    req = flask.request.get_json(force=True)
-    params = {
-        'seller' : req.get('seller'),
-        'buyer' : req.get('buyer'),
-        'message' : req.get('message'),
-        'date' : arrow.now().format('YYYY-MM-DD HH:MM:SS')
-    }
-    queries = [
-        f"INSERT INTO {params['seller']}_inbox (sender, body, date) VALUES ('{params['buyer']}', '{params['message']}', '{params['date']}')",
-        f"INSERT INTO {params['buyer']}_outbox ([to], body, date) VALUES ('{params['seller']}', '{params['message']}', '{params['date']}')"
-    ]
-    return query_db(queries = queries, method = 'send_message', params = params)
+class Search(MethodResource, Resource):
+    def post(self):
+        req = flask.request.get_json(force=True)
+        params = {'query' : req.get('query')}
+        queries = [f"select * from inventory where title like '%{params['query']}%' or description like '%{params['query']}%'"]
+        return query_db(queries = queries, method = 'search', params = params)
 
-@app.route('/api/get_inbox', methods=['POST'])
-def get_inbox():
-    req =  flask.request.get_json(force=True)
-    params = {'user' : req.get('user')}
-    queries = [
-        f"SELECT * FROM {params['user']}_inbox",
-        f"SELECT * FROM {params['user']}_outbox"
-    ]
-    return query_db(queries = queries, method = 'get_inbox', params = params)
+api.add_resource(Search, '/api/search')
+docs.register(Search)
 
-@app.route('/api/get_messages', methods=['POST'])
-def get_messages():
-    req = flask.request.get_json(force=True)
-    params = {
-        'user' : req.get('user'),
-        'contact' : req.get('contact')
-    }
-    queries = [
-        f"SELECT * FROM {params['user']}_inbox WHERE sender LIKE '%{params['contact']}%'",
-        f"SELECT * FROM {params['user']}_outbox WHERE [to] LIKE '%{params['contact']}%'"
-    ]
-    return query_db(queries = queries, method = 'get_messages', params = params)
+class PostProduct(MethodResource, Resource):
+    def post(self):
+        req = flask.request.get_json(force=True)
+        title = req.get('title')
+        params = {
+            'title' : title,
+            'price' : req.get('price'),
+            'description' : req.get('description'),
+            'category' : req.get('category'),
+            'date_added' : arrow.now().format('YYYY-MM-DD'),
+            'photo_filepath' : f"/img/{title}.jpg",
+            'seller' : req.get('seller'),
+            'state' : req.get('state'),
+            'image' : req.get('image')
+        }
+        queries = [f"insert into inventory (title, price, description, category, date_added, photo_filepath, seller, state, photo) values ('{params['title']}', '{params['price']}', '{params['description']}', '{params['category']}', '{params['date_added']}', '{params['photo_filepath']}', '{params['seller']}', '{params['state']}', '{params['image']}')"]
+        return query_db(queries = queries, method = 'post_product', params = params)
 
+api.add_resource(PostProduct, '/api/post_product')
+docs.register(PostProduct)
+
+
+class SendMessage(MethodResource, Resource):
+    def post(self):
+        req = flask.request.get_json(force=True)
+        params = {
+            'seller' : req.get('seller'),
+            'buyer' : req.get('buyer'),
+            'message' : req.get('message'),
+            'date' : arrow.now().format('YYYY-MM-DD HH:MM:SS')
+        }
+        queries = [
+            f"INSERT INTO {params['seller']}_inbox (sender, body, date) VALUES ('{params['buyer']}', '{params['message']}', '{params['date']}')",
+            f"INSERT INTO {params['buyer']}_outbox ([to], body, date) VALUES ('{params['seller']}', '{params['message']}', '{params['date']}')"
+        ]
+        return query_db(queries = queries, method = 'send_message', params = params)
+
+api.add_resource(SendMessage, '/api/send_message')
+docs.register(SendMessage)
+
+
+class GetInbox(MethodResource, Resource):
+    def post(self):
+        req =  flask.request.get_json(force=True)
+        params = {'user' : req.get('user')}
+        queries = [
+            f"SELECT * FROM {params['user']}_inbox",
+            f"SELECT * FROM {params['user']}_outbox"
+        ]
+        return query_db(queries = queries, method = 'get_inbox', params = params)
+
+api.add_resource(GetInbox, '/api/get_inbox')
+docs.register(GetInbox)
+
+
+class GetMessage(MethodResource, Resource):
+    def post(self):
+        req = flask.request.get_json(force=True)
+        params = {
+            'user' : req.get('user'),
+            'contact' : req.get('contact')
+        }
+        queries = [
+            f"SELECT * FROM {params['user']}_inbox WHERE sender LIKE '%{params['contact']}%'",
+            f"SELECT * FROM {params['user']}_outbox WHERE [to] LIKE '%{params['contact']}%'"
+        ]
+        return query_db(queries = queries, method = 'get_messages', params = params)
+
+api.add_resource(GetMessage, '/api/get_messages')
+docs.register(GetMessage)
 
 # Run the example
 if __name__ == '__main__':
