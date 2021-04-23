@@ -16,6 +16,8 @@ import UploadProduct from "./Sell";
 import Search from './components/Search';
 import SendMessage from './components/SendMessage'
 import Messages from './components/Messages'
+import ContactUs from './ContactUs'
+
 
 
 function App() {
@@ -35,6 +37,8 @@ function App() {
     <Route path="/Search" component={Search} />
     <Route path="/SendMessage" component={SendMessage} />
     <Route path="/Messages" component={Messages} />
+    <Route path="/ContactUs" component={ContactUs}/>
+
     </Switch>
 </BrowserRouter>
     </div>
