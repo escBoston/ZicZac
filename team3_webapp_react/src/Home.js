@@ -26,7 +26,6 @@ function Home(props) {
 
 <BrowserRouter>
     <Switch>
-    <Route path="/Products" component={Products} />
     <Route path="/ProductDetails" component={ProductDetails} />
     <Route path="/Account" component={Account} />
     <Route path="/Sell" component={Sell} />

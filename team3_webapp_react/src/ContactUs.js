@@ -38,9 +38,9 @@ export default class ContactUs extends React.Component{
 
   render(){
      return(
-      <div className="ContactUs">
+      <div className="ContactUs" >
         <Header />
-        <form id="contact-form" onSubmit={this.handleSubmit.bind(this)} method="POST">
+        <form style={{paddingLeft: '100px', width: '700px', height: "400px"}} id="contact-form" onSubmit={this.handleSubmit.bind(this)} method="POST">
           <br /> <br /> <br />
           <div className="form-group">
             <label htmlFor="exampleInputEmail1">Email Address</label>
@@ -72,11 +72,3 @@ export default class ContactUs extends React.Component{
 
 
 }
-
-
-
-
-
-
-
-
