@@ -27,7 +27,6 @@ const Header = (props) => {
     <Navbar.Brand href="#home"><img className="logo" src={logo} alt="Logo" /></Navbar.Brand>
     <Nav className="mr-auto">
       <Nav.Link className="header_link" href="../Home">Home</Nav.Link>
-      <Nav.Link className="header_link" href="../Products">Products</Nav.Link>
     </Nav>
     <Form inline>
       <FormControl type="text" onChange={handleQueryChange} value={query} placeholder="Search" className="mr-sm-2" />

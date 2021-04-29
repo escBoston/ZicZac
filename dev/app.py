@@ -258,7 +258,7 @@ class SendMessage(MethodResource, Resource):
         }
         queries = [
             f"INSERT INTO {params['seller']}_inbox (sender, body, date) VALUES ('{params['buyer']}', '{params['message']}', '{params['date']}')",
-            f"INSERT INTO {params['buyer']}_outbox ([to], body, date) VALUES ('{params['seller']}', '{params['message']}', '{params['date']}')"
+            f"INSERT INTO {params['buyer']}_outbox (recipient, body, date) VALUES ('{params['seller']}', '{params['message']}', '{params['date']}')"
         ]
         return query_db(queries = queries, method = 'send_message', params = params)
 
@@ -289,7 +289,7 @@ class GetMessage(MethodResource, Resource):
         }
         queries = [
             f"SELECT * FROM {params['user']}_inbox WHERE sender LIKE '%{params['contact']}%'",
-            f"SELECT * FROM {params['user']}_outbox WHERE [to] LIKE '%{params['contact']}%'"
+            f"SELECT * FROM {params['user']}_outbox WHERE recipient LIKE '%{params['contact']}%'"
         ]
         return query_db(queries = queries, method = 'get_messages', params = params)
 
